@@ -62,6 +62,7 @@ Parameter | Description
 -query | Queries configuration information of previously created Exchange_Perfwiz Data Collector
  -quiet | Silently run ExPerfWiz (no prompts).
 -server | Creates ExPerfWiz data collector on remote server specified.  If no server is specified, the local server will be used.
+-skipUpdateCheck | Skips the default behavior of ExPerfWiz to check for an update.
 -start | Starts a previously created ExPerfWiz data collection
 -stop | Stops the currently running ExPerfWiz data collection.  This is useful if you need to stop ExPerfWiz before the configured duration is met.  For example, the default duration is 8 hours, however you may want to stop the collection process after only 4 hours.
 -StoreExtendedOn | Enables Extended Store performance counters. Currently not supported with Exchange 2013.
@@ -72,6 +73,10 @@ Parameter | Description
 # Known Issues
   - Won't work on Windows 2003 if default system is something other than English (Get off 2003!)
   - Other bugs with Windows 2003 (Again, get off 2003!)
+
+# Change Log
+  - 6/29/17 (brenle)
+    - Added auto check for update on run (Powershell 3+)
 
 # Contributing
 
