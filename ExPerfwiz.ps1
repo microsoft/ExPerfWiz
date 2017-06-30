@@ -17,9 +17,9 @@
 # Script to help automate the collection of performance data on Exchange 2007/2010/2013/2016 servers 
 # Created by mikelag@microsoft.com
 # Currently maintained by brenle@microsoft.com 
-# Last Update 6/29/2017
-# Version 1.4.5
+#
 #################################################################################
+
 
 Param (
 [int]$interval,
@@ -48,7 +48,8 @@ Param (
 [switch]$quiet,
 [string]$CustomCounterPath,
 [switch]$ConvertToCsv,
-[string]$CsvFilepath
+[string]$CsvFilepath,
+[switch]$skipUpdateCheck
 )
 $script:Windows2003 = $false
 $script:Windows2008 = $false
@@ -56,7 +57,44 @@ $script:Windows2008R2 = $false
 $script:Windows2012 = $false
 $script:Windows2012R2 = $false
 $script:full = $true
-$oldDebugPreference = $DebugPreference  
+$oldDebugPreference = $DebugPreference
+
+#################################################################################
+#
+# UPDATE THESE EVERY BUILD
+#
+# Last Update 6/29/2017
+$script:version = "1.4.6"
+#
+#################################################################################
+
+function checkUpdate
+{
+    Write-Host "ExPerfWiz Version " $script:version
+    Write-Host "Checking for newer version.  To disable, run with -skipUpdateCheck..."
+    $url = "https://raw.githubusercontent.com/Microsoft/ExPerfWiz/master/VERSION"
+    $updateResult = Invoke-WebRequest $url -ErrorAction SilentlyContinue
+    if(($script:version -ne $updateResult.Content) -and !$Error)
+    {
+        write-host "There is a newer version of the script to download.  Do you want to download it?" -NoNewline
+        $answer = ConfirmAnswer
+        if($answer -eq "yes")
+        {
+            $ie = new-object -comobject "InternetExplorer.Application"  
+	        $ie.visible = $true  
+	        $ie.navigate("https://github.com/Microsoft/ExPerfWiz")
+            write-host "Close and reopen EMS before running the updated script."
+	        exit
+        }
+        if($answer -eq "no")
+        {
+            
+        }
+    } elseif ($Error)
+    {
+        Write-Host "Error checking for latest version"
+    }else{Write-Host $script:version "is the latest version"}
+}
 
 function GetExServerInfo
 {
@@ -2657,143 +2695,17 @@ Function IsHelpRequest
 # the same format provided by get-help or <cmdletcall> -?
 Function Usage
 {
-@"
-
-NAME:
-`tExPerfwiz.ps1
-
-INFORMATION:
-`tSets up Performance data collections for Exchange 2007/2010/2013/2016 servers
-
-SYNTAX:
-`tExperfwiz.ps1 [-begin <StringValue>] [-duration <StringValue>] [-end <StringValue>] [-filepath <StringValue>] 
-`t[-interval <IntegerValue>] [-maxsize <IntegerValue>] 
-
-`t OR
-
-`tExperfwiz.ps1 [-ConvertToCsv] [-filepath <path to blg>] [-csvfilepath <where to create csv>]
-
-PARAMETERS:
-
-`t-begin
-`t`tSpecifies when you would like the perfmon data capture to begin.
-`t`tThe format must be specified as "01/00/0000 00:00:00"
-
-`t-circular
-`t`tTurns on circular logging to save on disk space. Negates default 
-`t`tduration of 8 hours.
-
-`t-ConvertToCsv
-`t`tConverts existing BLG files to CSV.  Must include -filepath (to 
-`t`tBLG files).  This can be run from any machine with Powershell 2.0+
-
-`t-CsvFilepath
-`t`tPath where converted CSV files should be stored.
-
-`t-delete
-`t`tDeletes the currently running Perfwiz data collection.
-
-`t-duration
-`t`tSpecifies the overall duration of the data collection.
-`t`tIf omitted, the default value is (08:00:00) or 8 hours.
-
-`t-end
-`t`tSpecifies when you would like the perfmon data capture to end.
-`t`tThe format must be specified as "01/00/0000 00:00:00"
-
-`t-EseExtendedOn
-`t`tEnables Extended ESE performance counters. Currently not supported
-`t`twith Exchange 2013/2016
-
-`t-EseExtendedOff
-`t`tDisables Extended ESE performance counters. Currently not supported
-`t`twith Exchange 2013/2016
-
-`t-ExMon
-`t`tAdds Exmon Tracing to specified server.
-
-`t-ExMonDuration
-`t`tSets Exmon trace duration. If not specified, 30 minutes is the 
-`t`tdefault duration.
-
-`t-filepath
-`t`tSpecifies the location to write the Data Collection files to.
-
-`t-full
-`t`tThis switch has been deprecated in version 1.3.8.  You can still run
-`t`tthe script with this switch, however ExPerfWiz will ignore it as all
-`t`tcollections are considered full now.  Use -nofull if you do not want
-`t`ta full collection.
-
-`t-interval
-`t`tSpecifies the interval time between data samples
-`t`tIf omitted, the default value is 30 seconds. To change the 
-`t`tinterval to 5 seconds, set the value to 5
-
-`t-maxsize
-`t`tSpecifies the maximum size of blg file in MB. If omitted, the
-`t`tdefault value is 512.
-
-`t-nofull
-`t`tFor Exchange 2007/2010, determines counters based on roles. Not supported 
-`t`tfor Exchange 2013/2016
-
-`t-query
-`t`tQueries configuration information of previously created
-`t`tExchange_Perfwiz Data Collector.
-
-`t-server
-`t`tCreates Exchange_Perfwiz data collector on remote server specified.
-`t`tIf no server is specified, the local server is used
-
-`t-start
-`t`tStarts a previously created Exchange_Perfwiz data collection.
-
-`t-stop
-`t`tStops the currently running Perfwiz data collection.
-
-`t-StoreExtendedOn
-`t`tEnables Extended Store performance counters.  Currently not supported
-`t`twith Exchange 2013/2016
-
-`t-StoreExtendedOff
-`t`tDisables Extended Store performance counters.  Currently not supported
-`t`twith Exchange 2013/2016
-
-`t-threads
-`t`tSpecifies whether threads will be added to the data collection.
-`t`tIf omitted, threads counters will not be added.
-
-`t-webhelp
-`t`tLaunches web help for script
-
-EXAMPLES:
-`t- Set duration to 4 hours, change interval to collect data every 5 seconds and set Data location to d:\Logs
-`t  .\experfwiz.ps1 -duration 04:00:00 -interval 5 -filepath D:\Logs
-`t
-`t- Enables Data Collection to begin on January 1st 2010 at 8:00AM
-`t  .\experfwiz.ps1 -begin "01/01/2010 08:00:00"
-`t
-`t- Use circular logging
-`t  .\experfwiz.ps1 -circular
-`t
-`t- Add threads to the collection set
-`t  .\experfwiz.ps1 -threads
-`t
-`t- Enables Performance Counter data and Exmon data collection
-`t  .\experfwiz.ps1 -Exmon
-`t
-`t- Only capture counters based on the installed roles of the server (Exchange 2007/2010 only)
-`t  .\experfwiz.ps1 -nofull
-`t
-`t- Convert a directory of BLG files to CSV
-`t  .\experfwiz.ps1 -ConvertToCsv -filepath c:\perflogs\
-`t
-"@
+    #Pulls up online help for script
+	$ie = new-object -comobject "InternetExplorer.Application"  
+	$ie.visible = $true  
+	$ie.navigate("https://github.com/Microsoft/ExPerfWiz#usage-examples")
+	exit
 }
 
 # Start Main Processing of Script
 # =================================================================================
+
+if((!$skipUpdateCheck) -and ($PSVersionTable.PSVersion.Major -ge 3)){checkUpdate}
 
 #ronba:translation for Data set was not found
 $counterSetNotFoundTranslations = @"
@@ -3402,7 +3314,7 @@ if ($WebHelp)
 	#Pulls up online help for script
 	$ie = new-object -comobject "InternetExplorer.Application"  
 	$ie.visible = $true  
-	$ie.navigate("http://experfwiz.codeplex.com")
+	$ie.navigate("https://github.com/Microsoft/ExPerfWiz#usage-examples")
 	exit
 }
 
