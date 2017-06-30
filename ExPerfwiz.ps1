@@ -68,14 +68,26 @@ $script:version = "1.4.6"
 #
 #################################################################################
 
+function welcome
+{
+    cls
+    write-host ""
+    write-host "========================================================"
+    write-host "|                                                      |"
+    write-Host "|                   ExPerfWiz v"$script:version"                  |"
+    write-host "|                                                      |"
+    write-host "========================================================"
+    write-host ""
+}
+
 function checkUpdate
 {
-    Write-Host "ExPerfWiz Version " $script:version
     Write-Host "Checking for newer version.  To disable, run with -skipUpdateCheck..."
     $url = "https://raw.githubusercontent.com/Microsoft/ExPerfWiz/master/VERSION"
     $updateResult = Invoke-WebRequest $url -ErrorAction SilentlyContinue
     if(($script:version -ne $updateResult.Content) -and !$Error)
     {
+        write-host ""
         write-host "There is a newer version of the script to download.  Do you want to download it?" -NoNewline
         $answer = ConfirmAnswer
         if($answer -eq "yes")
@@ -92,8 +104,11 @@ function checkUpdate
         }
     } elseif ($Error)
     {
+        write-host ""
         Write-Host "Error checking for latest version"
-    }else{Write-Host $script:version "is the latest version"}
+    }else{
+    write-host ""
+    Write-Host $script:version "is the latest version"}
 }
 
 function GetExServerInfo
@@ -2704,6 +2719,8 @@ Function Usage
 
 # Start Main Processing of Script
 # =================================================================================
+
+if(!$quiet){welcome}
 
 if((!$skipUpdateCheck) -and ($PSVersionTable.PSVersion.Major -ge 3)){checkUpdate}
 
