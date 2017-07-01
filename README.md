@@ -1,3 +1,8 @@
+# Download
+Use this link: https://github.com/Microsoft/ExPerfWiz/blob/master/ExPerfwiz.zip?raw=true
+
+IF YOU USE THE DOWNLOAD ZIP BUTTON IT WILL BREAK THE SCRIPT!
+
 # About ExPerfWiz
 ExPerfWiz is a PowerShell based script to help automate the collection of performance data on Exchange 2007, 2010, 2013 and 2016 servers.  Supported operating systems are Windows 2003, 2008, 2008 R2, 2012 and 2012 R2.
 
