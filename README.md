@@ -74,10 +74,14 @@ Parameter | Description
 -webhelp | Launches web help for script
 
 # Known Issues
+  - If you had downloaded version 1.4.6 between 6/29/17 and 6/30/17, you may have a corrupt file that shows "Error.  The command completed successfully."  If so, download the latest version again using the link above.
   - Won't work on Windows 2003 if default system is something other than English (Get off 2003!)
   - Other bugs with Windows 2003 (Again, get off 2003!)
 
 # Change Log
+  - 7/5/17 (brenle)
+    - Added Windows 2016 support.
+    - Skip update check when -start and -stop parameters are used
   - 6/29/17 (brenle)
     - Added auto check for update on run (Powershell 3+)
 
