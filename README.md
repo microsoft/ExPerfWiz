@@ -79,10 +79,14 @@ Parameter | Description
   - Other bugs with Windows 2003 (Again, get off 2003!)
 
 # Change Log
-  - 7/5/17 (brenle)
+  - 7/10/17 1.4.7.1 (brenle)
+    - Fixed Windows 2016 bug (thanks to shaneto)
+    - Fixed quiet switch bug
+    - Improved update check process and reliability
+  - 7/5/17 1.4.7 (brenle)
     - Added Windows 2016 support.
     - Skip update check when -start and -stop parameters are used
-  - 6/29/17 (brenle)
+  - 6/29/17 1.4.6 (brenle)
     - Added auto check for update on run (Powershell 3+)
 
 # Contributing
