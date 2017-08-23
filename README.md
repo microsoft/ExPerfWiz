@@ -79,7 +79,7 @@ Parameter | Description
   - Other bugs with Windows 2003 (Again, get off 2003!)
 
 # Change Log
-  - 8/23/17 1.4.7.1 (brenle)
+  - 8/23/17 1.4.7.2 (brenle)
     - Changed default interval to 5 seconds
   - 7/10/17 1.4.7.1 (brenle)
     - Fixed Windows 2016 bug (thanks to shaneto)
