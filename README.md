@@ -59,7 +59,7 @@ Parameter | Description
 -ExMonDuration | Sets ExMon trace duration.  If not specified, 30 minutes is the default duration.  Exchange 2013 support added in 1.4.2.
  -ExmonOnly | Only collect ExMon capture - do NOT collect Performance data. Version 1.4.5+
 -filepath | Sets the directory location of where the BLG file will be stored. Default Location is C:\Perflogs.
--interval | Specifies the interval time between data samples. If omitted, the default value is 30 seconds.  NOTE: Exchange 2013 and Server 2012 introduced a large number of counters that were not available in previous version of Exchange/Windows.  Because of this, using a value of less than 5 will result in very large files, very quick.  Please be sure the storage location has enough space.
+-interval | Specifies the interval time between data samples. If omitted, the default value is 5 seconds.  NOTE: Exchange 2013 and Server 2012 introduced a large number of counters that were not available in previous version of Exchange/Windows.  Because of this, using a value of less than 5 will result in very large files, very quickly.  Please be sure the storage location has enough space.
 -maxsize | Specifies the maximum size of BLG file in MB. If omitted, the default value is 512. NOTE: Starting with v1.4, Exchange 2013/2016 defaults to 1024MB
 -nofull | Run ExPerfWiz in role-based mode.  This will collect counters based on the roles installed.  Currently not supported with Exchange 2013/2016.
 -query | Queries configuration information of previously created Exchange_Perfwiz Data Collector
