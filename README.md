@@ -79,6 +79,8 @@ Parameter | Description
   - Other bugs with Windows 2003 (Again, get off 2003!)
 
 # Change Log
+  - 11/7/17 1.4.7.3 (brenle)
+    - Fixed bug for running on Windows Server 2016
   - 8/23/17 1.4.7.2 (brenle)
     - Changed default interval to 5 seconds
   - 7/10/17 1.4.7.1 (brenle)
