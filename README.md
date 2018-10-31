@@ -71,6 +71,7 @@ Parameter | Description
 -StoreExtendedOn | Enables Extended Store performance counters. Currently not supported with Exchange 2013.
 -StoreExtendedOff | Disables Extended Store performance counters. Currently not supported with Exchange 2013.
 -threads | Specifies whether threads will be added to the data collection. If omitted, threads counters will not be added to the collection
+-fullNIC | Specifies whether advance NIC adapter counters will be included in the data collection. By default, they are not included. 
 -webhelp | Launches web help for script
 
 # Known Issues
@@ -79,6 +80,8 @@ Parameter | Description
   - Other bugs with Windows 2003 (Again, get off 2003!)
 
 # Change Log
+  - 10/31/18 1.4.7.4 (dpaul)
+    - Added Network Counters 
   - 11/7/17 1.4.7.3 (brenle)
     - Fixed bug for running on Windows Server 2016
   - 8/23/17 1.4.7.2 (brenle)
