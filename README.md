@@ -65,13 +65,13 @@ Parameter | Description
 -query | Queries configuration information of previously created Exchange_Perfwiz Data Collector
  -quiet | Silently run ExPerfWiz (no prompts).
 -server | Creates ExPerfWiz data collector on remote server specified.  If no server is specified, the local server will be used.
--skipUpdateCheck | Skips the default behavior of ExPerfWiz to check for an update.
+-skipUpdateCheck | Skips the default behavior of ExPerfWiz to check for an update.  If you are running Server Core, the update check is skipped automatically.
 -start | Starts a previously created ExPerfWiz data collection
 -stop | Stops the currently running ExPerfWiz data collection.  This is useful if you need to stop ExPerfWiz before the configured duration is met.  For example, the default duration is 8 hours, however you may want to stop the collection process after only 4 hours.
 -StoreExtendedOn | Enables Extended Store performance counters. Currently not supported with Exchange 2013.
 -StoreExtendedOff | Disables Extended Store performance counters. Currently not supported with Exchange 2013.
 -threads | Specifies whether threads will be added to the data collection. If omitted, threads counters will not be added to the collection
--webhelp | Launches web help for script
+-webhelp | Launches web help for script.  This will not work with Server Core OS.
 
 # Known Issues
   - If you had downloaded version 1.4.6 between 6/29/17 and 6/30/17, you may have a corrupt file that shows "Error.  The command completed successfully."  If so, download the latest version again using the link above.
