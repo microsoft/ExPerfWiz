@@ -2,7 +2,7 @@
 Use this link: https://github.com/Microsoft/ExPerfWiz/blob/master/ExPerfwiz.zip?raw=true
 
 # About ExPerfWiz
-ExPerfWiz is a PowerShell based script to help automate the collection of performance data on Exchange 2007, 2010, 2013, 2016 and 2019 servers.  Supported operating systems are Windows 2003, 2008, 2008 R2, 2012, 2012 R2, 2016 and 2019 Core/Standard.
+ExPerfWiz is a PowerShell based script to help automate the collection of performance data on Exchange 2007, 2010, 2013, 2016 and 2019 servers.  Supported operating systems are Windows 2003, 2008, 2008 R2, 2012, 2012 R2, 2016 and 2019 Core and Standard.
 
 # Important Notes
 * The default duration is 8 hours to save on disk space meaning that the data collection will stop after 8 hours. If you should need a longer duration, please review the switches below for the best possible configuration that meets your needs.
