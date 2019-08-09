@@ -65,8 +65,8 @@ $oldDebugPreference = $DebugPreference
 #
 # UPDATE THESE EVERY BUILD
 #
-# Last Update 1/30/19
-$script:version = "beta1.4.8beta"
+# Last Update 8/9/19
+$script:version = "1.4.8"
 #
 #################################################################################
 
@@ -75,7 +75,7 @@ function welcome{
     write-host ""
     write-host "========================================================"
     write-host "|                                                      |"
-    write-Host "|                   ExPerfWiz v"$script:version"                |"
+    write-Host "                ExPerfWiz v"$script:version"            "
     write-host "|                                                      |"
     write-host "========================================================"
     write-host ""
@@ -84,7 +84,7 @@ function welcome{
 function checkUpdate
 {
     Write-Host "Checking for newer version.  To disable, run with -skipUpdateCheck..."
-    $url = "https://raw.githubusercontent.com/Microsoft/ExPerfWiz/master/BETAVERSION"
+    $url = "https://raw.githubusercontent.com/Microsoft/ExPerfWiz/master/VERSION"
     $script:updateResult = Invoke-WebRequest $url -ErrorAction SilentlyContinue
     if($script:version -ne $script:updateResult.Content)
     {
@@ -113,22 +113,19 @@ function checkUpdate
 				
 				Write-Host "Downloading $source to $pathofNewVersion"
 
-				bitsadmin /transfer "ExPerfWiz-v$versionToDownload" /dynamic /download /priority FOREGROUND $source "$($pathofnewversion)\ExPerfWiz.ps1"
+				bitsadmin /transfer "ExPerfWiz-v$versionToDownload" /dynamic /download /priority FOREGROUND $source "$($pathofnewversion)\ExPerfWiz.ps1" | Out-Null
 				
 				if(Test-Path "$($pathOfNewVersion)\ExPerfWiz.ps1"){
 					Write-Host "New Version $($versionToDownload) has been downloaded to $($pathofNewVersion)\ExPerfWiz.ps1"
-
-					Write-Debug "Launching updated version of the script with the same parameters..."
+					Write-Host "Please close and reopen EMS before running the updated script."
+					exit
+					#Write-Debug "Launching updated version of the script with the same parameters..." coming soon
 					
-					#https://etechgoodness.wordpress.com/2014/04/21/powershell-script-that-calls-itself-recursively/
-
 
 				} else {
-					Write-Host "There was an issue downloading the latest version.  Please visit aka.ms/ExPerfWiz to download manually."
+					Write-Host "There was an issue downloading the latest version.  Please visit https://github.com/microsoft/ExPerfWiz to download manually."
 				}
-				#write-host "Close and reopen EMS before running the updated script."
-				#exit
-				
+
             }
             if($answer -eq "no")
             {
