@@ -80,7 +80,7 @@ Parameter | Description
 
 # Change Log
   - 8/9/19 1.4.8 (brenle)
-    - Updated script to support releases functionality of github
+    - Updated script to support releases functionality of github.  This has two advantages: 1) Previous release can be organized and downloaded if there is an issue. 2) Removing the reliance on zipped up files
     - Updated script to download using bits transfer rather than open browser
     - Added option to download Exchange HealthChecker script
   - 1/29/19 1.4.7.4 (brenle)
