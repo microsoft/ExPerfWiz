@@ -1,5 +1,5 @@
 # Download
-Use this link: https://github.com/Microsoft/ExPerfWiz/blob/master/ExPerfwiz.zip?raw=true
+Download the latest from Releases: https://github.com/microsoft/ExPerfWiz/releases
 
 # About ExPerfWiz
 ExPerfWiz is a PowerShell based script to help automate the collection of performance data on Exchange 2007, 2010, 2013, 2016 and 2019 servers.  Supported operating systems are Windows 2003, 2008, 2008 R2, 2012, 2012 R2, 2016 and 2019 Core and Standard.
@@ -79,6 +79,10 @@ Parameter | Description
   - Other bugs with Windows 2003 (Again, get off 2003!)
 
 # Change Log
+  - 8/9/19 1.4.8 (brenle)
+    - Updated script to support releases functionality of github.  This has two advantages: 1) Previous release can be organized and downloaded if there is an issue. 2) Removing the reliance on zipped up files
+    - Updated script to download using bits transfer rather than open browser
+    - Added option to download Exchange HealthChecker script
   - 1/29/19 1.4.7.4 (brenle)
     - Added support for Exchange 2019
     - Added support for Server 2019/Core
