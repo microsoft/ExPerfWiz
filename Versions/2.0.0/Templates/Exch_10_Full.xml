@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<DataCollectorSet>
+	<Status>0</Status>
+	<Duration>0</Duration>
+	<Description>ExPerfwiz Test Template</Description>
+	<DescriptionUnresolved>
+	</DescriptionUnresolved>
+	<DisplayName>ExPerfWiz</DisplayName>
+	<DisplayNameUnresolved>ExPerfWiz</DisplayNameUnresolved>
+	<SchedulesEnabled>-1</SchedulesEnabled>
+	<LatestOutputLocation>
+	</LatestOutputLocation>
+	<Name>ExPefwiz Test</Name>
+	<OutputLocation>C:\Temp\experfwiz\GAMER_20200911-000001</OutputLocation>
+	<RootPath>C:\Temp\experfwiz</RootPath> 
+	<Segment>0</Segment>
+	<SegmentMaxDuration>28800</SegmentMaxDuration>
+	<SegmentMaxSize>100</SegmentMaxSize>
+	<SerialNumber>1</SerialNumber>
+	<Server>
+	</Server>
+	<Subdirectory>
+	</Subdirectory>
+	<SubdirectoryFormat>3</SubdirectoryFormat>
+	<SubdirectoryFormatPattern>yyyyMMdd\-NNNNNN</SubdirectoryFormatPattern>
+	<Task>
+	</Task>
+	<TaskRunAsSelf>0</TaskRunAsSelf>
+	<TaskArguments>
+	</TaskArguments>
+	<TaskUserTextArguments>
+	</TaskUserTextArguments>
+	<UserAccount>SYSTEM</UserAccount>
+	<Security></Security>
+	<StopOnCompletion>0</StopOnCompletion>
+	<PerformanceCounterDataCollector>
+		<DataCollectorType>0</DataCollectorType>
+		<Name>ExPefwiz</Name>
+		<FileName>ExPefwiz</FileName>
+		<FileNameFormat>3</FileNameFormat>
+		<FileNameFormatPattern>MMdd\-N</FileNameFormatPattern>
+		<LogAppend>-1</LogAppend>
+		<LogCircular>0</LogCircular>
+		<LogOverwrite>0</LogOverwrite>
+		<LatestOutputLocation>
+		</LatestOutputLocation>
+		<DataSourceName>
+		</DataSourceName>
+		<SampleInterval>15</SampleInterval>
+		<SegmentMaxRecords>0</SegmentMaxRecords>
+		<LogFileFormat>3</LogFileFormat>
+						<Counter>.NET CLR Exceptions(*)\*</Counter>
+			<Counter>.NET CLR Memory(*)\*</Counter>
+			<Counter>ASP.NET\*</Counter>
+			<Counter>ASP.NET Apps v2.0.50727(*)\*</Counter>
+			<Counter>ASP.NET v2.0.50727\*</Counter>
+			<Counter>Cache\*</Counter>
+			<Counter>HTTP Service Request Queues(*)\*</Counter>
+			<Counter>LogicalDisk(*)\*</Counter>
+			<Counter>Memory\*</Counter>
+			<Counter>MSFTESQL-Exchange:Catalogs(*)\*</Counter>
+			<Counter>MSFTESQL-Exchange:FD(*)\*</Counter>
+			<Counter>MSFTESQL-Exchange:Indexer PlugIn(*)\*</Counter>
+			<Counter>MSFTESQL-Exchange:Service\*</Counter>
+			<Counter>Network Interface(*)\*</Counter>
+			<Counter>Objects\*</Counter>
+			<Counter>Paging File(*)\*</Counter>
+			<Counter>PhysicalDisk(*)\*</Counter>
+			<Counter>Process(*)\*</Counter>
+			<Counter>Processor(*)\*</Counter>
+			<Counter>Processor Information(*)\*</Counter>
+			<Counter>Redirector\*</Counter>
+			<Counter>Server\*</Counter>
+			<Counter>Server Work Queues(*)\*</Counter>
+			<Counter>System\Context Switches/sec</Counter>
+			<Counter>System\Processor Queue Length</Counter>
+			<Counter>Web Service(*)\*</Counter>
+			<Counter>RPC/HTTP Proxy\*</Counter>
+			<Counter>RPC/HTTP Proxy Per Server\*</Counter>
+			<Counter>TCPv4\*</Counter>
+			<Counter>TCPv6\*</Counter>
+			<Counter>Netlogon(*)\*</Counter>
+			<Counter>MSExchange Active Manager(*)\*</Counter>
+			<Counter>MSExchange Active Manager Client(*)\*</Counter>
+			<Counter>MSExchange Active Manager Server\*</Counter>
+			<Counter>MSExchange ActiveSync\*</Counter>
+			<Counter>MSExchange ADAccess Caches(*)\*</Counter>
+			<Counter>MSExchange ADAccess Domain Controllers(*)\*</Counter>
+			<Counter>MSExchange ADAccess Global Counters\*</Counter>
+			<Counter>MSExchange ADAccess Local Site Domain Controllers(*)\*</Counter>
+			<Counter>MSExchange ADAccess Processes(*)\*</Counter>
+			<Counter>MSExchange Approval Assistant\*</Counter>
+			<Counter>MSExchange Approval Framework(_total)\*</Counter>
+			<Counter>MSExchange Assistants - Per Assistant(*)\*</Counter>
+			<Counter>MSExchange Assistants - Per Database(*)\*</Counter>
+			<Counter>MSExchange Availability Service\*</Counter>
+			<Counter>MSExchange Calendar Attendant\*</Counter>
+			<Counter>MSExchange Calendar Notifications Assistant\*</Counter>
+			<Counter>MSExchange Calendar Repair Assistant\*</Counter>
+			<Counter>MSExchange Connection Filtering Agent\*</Counter>
+			<Counter>MSExchange Content Filter Agent\*</Counter>
+			<Counter>MSExchange Control Panel\*</Counter>
+			<Counter>MSExchange Conversations Transport Agent\*</Counter>
+			<Counter>MSExchange Database(*)\*</Counter>
+			<Counter>MSExchange Database ==> Instances(*)\*</Counter>
+			<Counter>MSExchange Database ==> TableClasses(*)\*</Counter>
+			<Counter>MSExchange Decryption Agent\*</Counter>
+			<Counter>MSExchange Encryption Agent\*</Counter>
+			<Counter>MSExchange Extensibility Agents(*)\*</Counter>
+			<Counter>MSExchange FreeBusy Assistant\*</Counter>
+			<Counter>MSExchange Inbound SMS Delivery Agent\*</Counter>
+			<Counter>MSExchange Journal Report Decryption Agent\*</Counter>
+			<Counter>MSExchange Journaling Agent\*</Counter>
+			<Counter>MSExchange Junk E-mail Options Assistant\*</Counter>
+			<Counter>MSExchange Log Search Service\*</Counter>
+			<Counter>MSExchange Mail Submission(*)\*</Counter>
+			<Counter>MSExchange Mailbox Replication Service\*</Counter>
+			<Counter>MSExchange Mailbox Replication Service Per Mdb(*)\*</Counter>
+			<Counter>MSExchange MailTips Service\*</Counter>
+			<Counter>MSExchange Managed Folder Assistant\*</Counter>
+			<Counter>MSExchange Message Tracking\*</Counter>
+			<Counter>MSExchange Middle-Tier Storage(*)\*</Counter>
+			<Counter>MSExchange Network Manager\*</Counter>
+			<Counter>MSExchange NSPI RPC Client Connections\*</Counter>
+			<Counter>MSExchange OWA\*</Counter>
+			<Counter>MSExchange Prelicensing Agent\*</Counter>
+			<Counter>MSExchange Protocol Analysis Agent\*</Counter>
+			<Counter>MSExchange Protocol Analysis Background Agent\*</Counter>
+			<Counter>MSExchange Provisioning\*</Counter>
+			<Counter>MSExchange Recipient Cache(_total)\*</Counter>
+			<Counter>MSExchange Recipient Filter Agent\*</Counter>
+			<Counter>MSExchange Replica Seeder\*</Counter>
+			<Counter>MSExchange Replication(_total)\*</Counter>
+			<Counter>MSExchange Resource Booking\*</Counter>
+			<Counter>MSExchange Rights Management\*</Counter>
+			<Counter>MSExchange RMS Agents\*</Counter>
+			<Counter>MSExchange RMS Decryption Agent\*</Counter>
+			<Counter>MSExchange RpcClientAccess\*</Counter>
+			<Counter>MSExchange RpcClientAccess Per Server(*)\*</Counter>
+			<Counter>MSExchange Search Indexer\*</Counter>
+			<Counter>MSExchange Search Indices(_total)\*</Counter>
+			<Counter>MSExchange Secure Mail Transport(_total)\*</Counter>
+			<Counter>MSExchange Sender Filter Agent\*</Counter>
+			<Counter>MSExchange Sender Id Agent\*</Counter>
+			<Counter>MSExchange Sharing Engine\*</Counter>
+			<Counter>MSExchange Store Driver(*)\*</Counter>
+			<Counter>MSExchange Store Interface(*)\*</Counter>
+			<Counter>MSExchange Text Messaging\*</Counter>
+			<Counter>MSExchange Throttling(*)\*</Counter>
+			<Counter>MSExchange Throttling Service Client\*</Counter>
+			<Counter>MSExchange TopN Words Assistant\*</Counter>
+			<Counter>MSExchange Topology(*)\*</Counter>
+			<Counter>MSExchange Transport Rules(*)\*</Counter>
+			<Counter>MSExchange Update Agent\*</Counter>
+			<Counter>MSExchangeAB\*</Counter>
+			<Counter>MSExchangeAL(*)\*</Counter>
+			<Counter>MSExchangeAutodiscover\*</Counter>
+			<Counter>MSExchangeEdgeSync Synchronizer\*</Counter>
+			<Counter>MSExchangeEdgeSync Topology\*</Counter>
+			<Counter>MSExchangeFDS:GM(*)\*</Counter>
+			<Counter>MSExchangeFDS:OAB(*)\*</Counter>
+			<Counter>MSExchangeImap4\*</Counter>
+			<Counter>MSExchangeIS\*</Counter>
+			<Counter>MSExchangeIS Client(*)\*</Counter>
+			<Counter>MSExchangeIS Mailbox(*)\*</Counter>
+			<Counter>MSExchangeIS Public(*)\*</Counter>
+			<Counter>MSExchangePop3\*</Counter>
+			<Counter>MSExchangeTransport Batch Point(*)\*</Counter>
+			<Counter>MSExchangeTransport Component Latency(*)\*</Counter>
+			<Counter>MSExchangeTransport Configuration Cache(*)\*</Counter>
+			<Counter>MSExchangeTransport Database(*)\*</Counter>
+			<Counter>MSExchangeTransport Delivery Failures\*</Counter>
+			<Counter>MSExchangeTransport DeliveryAgent\*</Counter>
+			<Counter>MSExchangeTransport DSN(*)\*</Counter>
+			<Counter>MSExchangeTransport Dumpster\*</Counter>
+			<Counter>MSExchangeTransport IsMemberOfResolver(*)\*</Counter>
+			<Counter>MSExchangeTransport Pickup(*)\*</Counter>
+			<Counter>MSExchangeTransport Queues(*)\*</Counter>
+			<Counter>MSExchangeTransport Resolver(*)\*</Counter>
+			<Counter>MSExchangeTransport Routing(*)\*</Counter>
+			<Counter>MSExchangeTransport ServerAlive(*)\*</Counter>
+			<Counter>MSExchangeTransport Shadow Redundancy(*)\*</Counter>
+			<Counter>MSExchangeTransport SMTPAvailability(*)\*</Counter>
+			<Counter>MSExchangeTransport SMTPReceive(*)\*</Counter>
+			<Counter>MSExchangeTransport SmtpSend(*)\*</Counter>
+			<Counter>MSExchangeUMClientAccess(*)\*</Counter>
+			<Counter>MSExchangeUMMessageWaitingIndicator(*)\*</Counter>
+			<Counter>MSExchangeWS\*</Counter>
+			<Counter>Server\*</Counter>
+			<Counter>System\Context Switches/sec</Counter>
+			<Counter>System\Processor Queue Length</Counter>
+			<Counter>W3SVC_W3WP(*)\*</Counter>
+			<Counter>WAS_W3WP(*)\*</Counter>
+			<Counter>VM Memory\*</Counter>
+			<Counter>VM Processor(*)\*</Counter>
+			<Counter>Expanded Groups Cache(*)\*</Counter>
+	</PerformanceCounterDataCollector>
+	<Schedule>
+		<StartDate>9/14/2020</StartDate>
+		<EndDate>9/15/2020</EndDate>
+		<StartTime>4:00:00 AM</StartTime>
+		<Days>127</Days>
+	</Schedule>
+	<DataManager>
+		<Enabled>0</Enabled>
+		<CheckBeforeRunning>0</CheckBeforeRunning>
+		<MinFreeDisk>0</MinFreeDisk>
+		<MaxSize>0</MaxSize>
+		<MaxFolderCount>0</MaxFolderCount>
+		<ResourcePolicy>0</ResourcePolicy>
+		<ReportFileName>report.html</ReportFileName>
+		<RuleTargetFileName>report.xml</RuleTargetFileName>
+		<EventsFileName>
+		</EventsFileName>
+	</DataManager>
+</DataCollectorSet>
