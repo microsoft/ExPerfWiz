@@ -104,7 +104,7 @@ Function New-ExPerfwiz {
 
     ### Creates a new experfwiz collector
     Param(
-        [bool]
+        [switch]
         $Circular = $false,
     
         [timespan]
@@ -124,19 +124,19 @@ Function New-ExPerfwiz {
         [string]
         $Name = "ExPerfwiz",
 
-        [bool]
+        [switch]
         $Quiet = $false,
 
         [string]
         $Server = $env:ComputerName,
 
-        [bool]
+        [switch]
         $StartOnCreate,
 
         [string]
         $Template,
 
-        [bool]
+        [switch]
         $Threads = $false
     )
 

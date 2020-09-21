@@ -46,7 +46,7 @@ Function Remove-ExPerfwiz {
         [string]
         $Server = $env:ComputerName,
 
-        [bool]
+        [switch]
         $Quiet = $false
     )
     

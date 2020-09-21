@@ -41,15 +41,20 @@ Function Get-ExPerfwiz {
         [string]
         $Server = $env:ComputerName,
 
-        [bool]
+        [switch]
         $Quiet = $false
     )
     
     Out-LogFile -string ("Starting ExPerfwiz: " + $server) -quiet $Quiet
     
-    # Remove the experfwiz counter set
+    # Get the experfwiz counter set
     $logman = logman query -name $Name -s $server
+
+    # Confert it to something that will look better in the log file / screen
     $formatlogman = $logman -join "`n`r" | out-string
+
+    # Now convert $logman to a string
+    [string]$logman = $logman
 
     # Check if we have an error and throw and error if needed.
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {

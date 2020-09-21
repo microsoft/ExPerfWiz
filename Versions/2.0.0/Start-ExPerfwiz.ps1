@@ -41,7 +41,7 @@ Function Start-ExPerfwiz {
         [string]
         $Server = $env:ComputerName,
 
-        [bool]
+        [switch]
         $Quiet = $false
     )
     
