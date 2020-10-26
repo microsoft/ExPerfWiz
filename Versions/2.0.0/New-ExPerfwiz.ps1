@@ -104,7 +104,7 @@ Function New-ExPerfwiz {
 
     ### Creates a new experfwiz collector
     Param(
-        [switch]
+        [bool]
         $Circular = $false,
     
         [timespan]
@@ -141,6 +141,10 @@ Function New-ExPerfwiz {
     )
 
     
+    # Expand any variables that made it thru the $folderpath
+    $FolderPath = $ExecutionContext.InvokeCommand.ExpandString($FolderPath)
+    
+    
     # Validate the folder path
     if (Test-Path $FolderPath -PathType Container) {}
     else {
@@ -149,6 +153,7 @@ Function New-ExPerfwiz {
 
     Out-LogFile -string ("Logging Actions to " + (join-path $env:LOCALAPPDATA experfwiz.log)) -quiet $Quiet
     Out-LogFile -String $MyInvocation.Line -quiet $Quiet
+    Out-LogFile -String ("Output Path " + $FolderPath) -quiet $Quiet
 
     ### Validate Template ###
 
@@ -233,7 +238,7 @@ Function New-ExPerfwiz {
     # <Counter> - Validate Counters - not sure if we need to do this ... windows seems to just handle if they aren't there in the XML
     ##### Schedule - Start and Stop Time????
     
-    Out-Logfile -string ("Importing ExPerfwiz " + $Name + " for " + $server) -quiet $Quiet
+    Out-Logfile -string ("Importing Collector Set " + $Name + " for " + $server) -quiet $Quiet
     
     # Import the XML with our configuration
     [string]$logman = logman import -xml $xmlfile -name $Name -s $server

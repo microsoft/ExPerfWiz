@@ -45,12 +45,12 @@ Function Get-ExPerfwiz {
         $Quiet = $false
     )
     
-    Out-LogFile -string ("Starting ExPerfwiz: " + $server) -quiet $Quiet
+    Out-LogFile -string ("Getting ExPerfwiz: " + $server) -quiet $Quiet
     
     # Get the experfwiz counter set
     $logman = logman query -name $Name -s $server
 
-    # Confert it to something that will look better in the log file / screen
+    # Convert it to something that will look better in the log file / screen
     $formatlogman = $logman -join "`n`r" | out-string
 
     # Now convert $logman to a string
@@ -59,6 +59,9 @@ Function Get-ExPerfwiz {
     # Check if we have an error and throw and error if needed.
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
         Out-LogFile $formatlogman -quiet $Quiet
+    }
+    elseif([bool]($logman | Select-String "data collector set was not found")){
+        # since we got the data collector set was not found do nothing
     }
     else {
         Out-LogFile "[ERROR] - Unable to Get collector" -quiet $Quiet

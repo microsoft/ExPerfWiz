@@ -1,3 +1,54 @@
+# About ExPerfWiz
+ExPerfWiz is a PowerShell based module to help automate the collection of performance data on Exchange 2010, 2013, 2016 and 2019 servers.  Supported operating systems are Windows 2008, 2008 R2, 2012, 2012 R2, 2016 and 2019 Core and Standard.
+
+# Recommended Install
+Install the powershell module from the powershell gallery using *Instal-Module ExPerfwiz* from the server where data will be gathered.
+
+Additional information can be found on how to install powershell modules here:
+https://docs.microsoft.com/en-us/powershell/scripting/gallery/overview?view=powershell-7
+
+# Manual Install
+If the server where data is being gathered doesn't have access to the internet directly then either:
+
+* Install the module to another machine in the org that does have access and use the -server switch
+* Download the module from https://github.com/microsoft/ExPerfWiz/releases
+  * Extract the Zip file to a known location
+  * From the location run *Import-Module experfwiz.psd1*
+
+# How to use
+The Module version of Experfwiz provides the following cmdlets to manage the Data Gathering.
+
+### Get-ExPerfwiz
+Gets ExPerfwiz data collector sets
+
+### New-ExPerfwiz
+Creates an ExPerfwiz data collector set
+
+### Remove-ExPerfwiz
+Removes an ExPerfwiz data collector set
+
+### Start-ExPerfwiz
+Starts an ExPerfwiz data collector set
+
+### Stop-ExPerfwiz
+Stops an ExPerfwiz data collector set
+
+# Example Usage
+
+- Default usage for data gathering
+
+*New-ExPerfwiz -
+
+
+
+
+
+
+
+
+
+# Legacy #
+
 # Download
 Download the latest from Releases: https://github.com/microsoft/ExPerfWiz/releases
 
