@@ -13,7 +13,7 @@ If the server where data is being gathered doesn't have access to the internet d
 * Install the module to another machine in the org that does have access and use the -server switch
 * Download the module from https://github.com/microsoft/ExPerfWiz/releases
   * Extract the Zip file to a known location
-  * From the location run `Import-Module experfwiz.psd1`
+  * From powershell in the extracted path run `Import-Module experfwiz.psd1`
 
 # How to use
 The Module version of Experfwiz provides the following cmdlets to manage the Data Gathering.
@@ -94,23 +94,11 @@ Quiet|Suppresses output to the screen|False
   When prompted pick the template for the version of Exchange being used
 
 # Important Notes
-* The default duration is 8 hours to save on disk space meaning that the data collection will stop after 8 hours. If you should need a longer duration, please review the switches below for the best possible configuration that meets your needs.
-The below table outlines what parameters ExPerfWiz can accept.
+* The default duration is 8 hours to save on disk space meaning that the data collection will stop after 8 hours.
 
-* Before running this script, you must do one or both of the following:
+* Using -Threads should only be done if needed to troubleshoot the issue.  It will SIGNIFICANTLY increase the size of the resulting perfmon files.
 
-  - Set PowerShell’s execution policy to Unrestricted using (Set-ExecutionPolicy Unrestricted)
-  
-  - Files downloaded from the internet using Internet Explorer are automatically blocked from running. Follow the below steps to Unblock this script from running.
-  
-    - Save the script file on your computer.
- 
-    - Click Start, click My Computer, and navigate to the saved script file.
- 
-    - Right-click the script file, and then click "Properties."
- 
-    - Click "Unblock."
-
+* If there are any questions about using PowerShell Gallery please see: https://docs.microsoft.com/en-us/powershell/scripting/gallery/overview?view=powershell-7 
 
 # Contributing
 
