@@ -21,7 +21,7 @@ Function New-ExPerfwiz {
     Default is 8 hours (08:00:00)
 
     .PARAMETER FolderPath
-    Path where performance logs should be collected.
+    Output Path for performance logs.
     The folder path should exist.
 
     This paramater is required.

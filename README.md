@@ -2,7 +2,7 @@
 ExPerfWiz is a PowerShell based module to help automate the collection of performance data on Exchange 2010, 2013, 2016 and 2019 servers.  Supported operating systems are Windows 2008, 2008 R2, 2012, 2012 R2, 2016 and 2019 Core and Standard.
 
 # Recommended Install
-Install the powershell module from the powershell gallery using *Instal-Module ExPerfwiz* from the server where data will be gathered.
+Install the powershell module from the powershell gallery using `Instal-Module ExPerfwiz` from the server where data will be gathered.
 
 Additional information can be found on how to install powershell modules here:
 https://docs.microsoft.com/en-us/powershell/scripting/gallery/overview?view=powershell-7
@@ -13,47 +13,85 @@ If the server where data is being gathered doesn't have access to the internet d
 * Install the module to another machine in the org that does have access and use the -server switch
 * Download the module from https://github.com/microsoft/ExPerfWiz/releases
   * Extract the Zip file to a known location
-  * From the location run *Import-Module experfwiz.psd1*
+  * From the location run `Import-Module experfwiz.psd1`
 
 # How to use
 The Module version of Experfwiz provides the following cmdlets to manage the Data Gathering.
 
-### Get-ExPerfwiz
+### `Get-ExPerfwiz`
 Gets ExPerfwiz data collector sets
 
-### New-ExPerfwiz
+Switch | Description|Default
+-------|-------|-------
+Name|Name of the Data Collector set|Experfwiz
+Server|Name of the Server |Local Machine
+Quiet|Suppress screen Output|False
+
+
+### `New-ExPerfwiz`
 Creates an ExPerfwiz data collector set
 
-### Remove-ExPerfwiz
+Switch | Description|Default
+-------|-------|-------
+Circular| Enabled or Disable circular logging|Disabled
+Duration| How long should the performance data be collected|08:00:00
+FolderPath|Output Path for performance logs|NA
+Interval|How often the performance data should be collected.|5s
+MaxSize|Maximum size of the perfmon log in MegaBytes|250Mb
+Name|The name of the data collector set|ExPerfwiz
+Quiet|Suppresses screen Output|False
+Server|Name of the server where the perfmon collector should be created|Local Machine
+StartOnCreate|Starts the counter set as soon as it is created|False
+Template| XML perfmon template file that should be loaded to create the data collector set.|Prompt
+Threads|Includes threads in the counter set.|False
+
+
+### `Remove-ExPerfwiz`
 Removes an ExPerfwiz data collector set
 
-### Start-ExPerfwiz
+Switch | Description|Default
+-------|-------|-------
+Name|Name of the Perfmon Collector set|ExPerfwiz
+Server|Name of the server to remove the collector set from|Local Machine
+Quiet|Suppresses output to the screen|False
+
+### `Start-ExPerfwiz`
 Starts an ExPerfwiz data collector set
 
-### Stop-ExPerfwiz
+Switch | Description|Default
+-------|-------|-------
+Name|The Name of the Data Collector set to start|ExPerfwiz
+Server|Name of the remote server to start the data collector set on.|Local Machine
+Quiet|Suppresses output to the screen|False
+
+### `Stop-ExPerfwiz`
 Stops an ExPerfwiz data collector set
+
+Switch | Description|Default
+-------|-------|-------
+Name|Name of the data collector set to stop.|ExPerfwiz
+Server|Name of the server to stop the collector set on.|Local Machine
+Quiet|Suppresses output to the screen|False
 
 # Example Usage
 
-- Default usage for data gathering
+### Default usage for data gathering
 
-*New-ExPerfwiz -
+  `New-ExPerfwiz -FolderPath C:\experfwiz`
 
-
-
-
+  When prompted pick the template for the version of Exchange that is being used
 
 
+### Stop Data Collection
+
+  `Stop-ExPerfwiz`
 
 
+### Collect data from another server
 
-# Legacy #
+  `New-ExPerfwiz -FolderPath C:\experfwiz -server RemoteExchServer`
 
-# Download
-Download the latest from Releases: https://github.com/microsoft/ExPerfWiz/releases
-
-# About ExPerfWiz
-ExPerfWiz is a PowerShell based script to help automate the collection of performance data on Exchange 2007, 2010, 2013, 2016 and 2019 servers.  Supported operating systems are Windows 2003, 2008, 2008 R2, 2012, 2012 R2, 2016 and 2019 Core and Standard.
+  When prompted pick the template for the version of Exchange being used
 
 # Important Notes
 * The default duration is 8 hours to save on disk space meaning that the data collection will stop after 8 hours. If you should need a longer duration, please review the switches below for the best possible configuration that meets your needs.
@@ -72,85 +110,7 @@ The below table outlines what parameters ExPerfWiz can accept.
     - Right-click the script file, and then click "Properties."
  
     - Click "Unblock."
- 
-# Usage Examples
 
-  - Set duration to 4 hours, change interval to collect data every 5 seconds and set data location to d:\Logs
-  
-    *.\experfwiz.ps1 -duration 04:00:00 -interval 5 -filepath D:\Logs*
-
-  - Stop data collection
-  
-    *.\experfwiz.ps1 -stop*
-
-  - Enables Perf Data collection on remote server MBXServer with interval set to 5 seconds and set Data location to d:\Logs
-  
-    *.\experfwiz.ps1 -server MBXServer -interval 5 -filepath D:\Logs*
-
-  - Enables Perf Data collection on the local server, enabled Exmon data collection with a duration of 1 hour. Note that new ETL files are created every 5 minutes. This is hardcoded and cannot be changed.
-  
-    *.\experfwiz.ps1 -Exmon -exmonduration 01:00:00*
-
-# Parameters
-
-Parameter | Description
---------- | -----------
--help or -? | Provides help regarding the overall usage of the script
--begin | Specifies when you would like the ExPerfWiz data capture to begin.  The format must be specified as: “01/00/0000 00:00:00”
--circular | Turns on circular logging to save on disk space. Negates default duration of 8 hours
--ConvertToCsv | Converts existing BLG files to CSV. Must include –filepath (to BLG files). This can be run from any machine with PowerShell.
--CsvFilepath | Path where converted CSV files should be stored
--debug | Runs in debug mode to help troubleshoot runtime issues.
--delete | Deletes the currently running ExPerfWiz data collection
--duration | Specifies the overall duration of the data collection. If omitted, the default value is (08:00:00) or 8 hours
--end | Specifies when you would like the ExPerfWiz data capture to end.  The format must be specified as: “01/00/0000 00:00:00”
--EseExtendedOn | Enables Extended ESE performance counters. Currently not supported with Exchange 2013.
--EseExtendedOff | Disables Extended ESE performance counters. Currently not supported with Exchange 2013.
--ExMon | Adds ExMon tracing to specified server.  Exchange 2013 support added in 1.4.2.
--ExMonDuration | Sets ExMon trace duration.  If not specified, 30 minutes is the default duration.  Exchange 2013 support added in 1.4.2.
- -ExmonOnly | Only collect ExMon capture - do NOT collect Performance data. Version 1.4.5+
--filepath | Sets the directory location of where the BLG file will be stored. Default Location is C:\Perflogs.
--interval | Specifies the interval time between data samples. If omitted, the default value is 5 seconds.  NOTE: Exchange 2013 and Server 2012 introduced a large number of counters that were not available in previous version of Exchange/Windows.  Because of this, using a value of less than 5 will result in very large files, very quickly.  Please be sure the storage location has enough space.
--maxsize | Specifies the maximum size of BLG file in MB. If omitted, the default value is 512. NOTE: Starting with v1.4, Exchange 2013/2016 defaults to 1024MB.  WARNING: Do not exceed a maxsize of 2048MB.
--nofull | Run ExPerfWiz in role-based mode.  This will collect counters based on the roles installed.  Currently not supported with Exchange 2013/2016.
--query | Queries configuration information of previously created Exchange_Perfwiz Data Collector
- -quiet | Silently run ExPerfWiz (no prompts).
--server | Creates ExPerfWiz data collector on remote server specified.  If no server is specified, the local server will be used.
--skipUpdateCheck | Skips the default behavior of ExPerfWiz to check for an update.  If you are running Server Core, the update check is skipped automatically.
--start | Starts a previously created ExPerfWiz data collection
--stop | Stops the currently running ExPerfWiz data collection.  This is useful if you need to stop ExPerfWiz before the configured duration is met.  For example, the default duration is 8 hours, however you may want to stop the collection process after only 4 hours.
--StoreExtendedOn | Enables Extended Store performance counters. Currently not supported with Exchange 2013.
--StoreExtendedOff | Disables Extended Store performance counters. Currently not supported with Exchange 2013.
--threads | Specifies whether threads will be added to the data collection. If omitted, threads counters will not be added to the collection
--webhelp | Launches web help for script.  This will not work with Server Core OS.
-
-# Known Issues
-  - If you had downloaded version 1.4.6 between 6/29/17 and 6/30/17, you may have a corrupt file that shows "Error.  The command completed successfully."  If so, download the latest version again using the link above.
-  - Won't work on Windows 2003 if default system is something other than English (Get off 2003!)
-  - Other bugs with Windows 2003 (Again, get off 2003!)
-
-# Change Log
-  - 8/9/19 1.4.8 (brenle)
-    - Updated script to support releases functionality of github.  This has two advantages: 1) Previous release can be organized and downloaded if there is an issue. 2) Removing the reliance on zipped up files
-    - Updated script to download using bits transfer rather than open browser
-    - Added option to download Exchange HealthChecker script
-  - 1/29/19 1.4.7.4 (brenle)
-    - Added support for Exchange 2019
-    - Added support for Server 2019/Core
-    - Tweaks for updated supportability
-  - 11/7/17 1.4.7.3 (brenle)
-    - Fixed bug for running on Windows Server 2016
-  - 8/23/17 1.4.7.2 (brenle)
-    - Changed default interval to 5 seconds
-  - 7/10/17 1.4.7.1 (brenle)
-    - Fixed Windows 2016 bug (thanks to shaneto)
-    - Fixed quiet switch bug
-    - Improved update check process and reliability
-  - 7/5/17 1.4.7 (brenle)
-    - Added Windows 2016 support.
-    - Skip update check when -start and -stop parameters are used
-  - 6/29/17 1.4.6 (brenle)
-    - Added auto check for update on run (Powershell 3+)
 
 # Contributing
 
