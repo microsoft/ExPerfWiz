@@ -38,5 +38,17 @@ Function Out-LogFile {
 
     # Write everything to our log file and the screen
     $logstring | Out-File -FilePath $LogFile -Append
-    if (!$Quiet) { Write-Information -MessageData $logstring -InformationAction Continue }
+    if (!$Quiet) { Write-Output -MessageData $logstring -InformationAction Continue }
+}
+
+Function Convert-OnOffBool {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [string]$tocompare
+    )
+
+    switch ($tocompare) {
+        On {return $true}
+        Default {return $false}
+    }
 }
