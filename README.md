@@ -12,8 +12,9 @@ If the server where data is being gathered doesn't have access to the internet d
 
 * Install the module to another machine in the org that does have access and use the -server switch
 * Download the module from https://github.com/microsoft/ExPerfWiz/releases
-  * Extract the Zip file to a known location
-  * From powershell in the extracted path run `Import-Module experfwiz.psd1`
+* Extract the Zip file to a known location
+* From powershell in the extracted path run `Import-Module experfwiz.psd1`
+* Change to a different directory than the one with the psd1 file
 
 # How to use
 The Module version of Experfwiz provides the following cmdlets to manage the Data Gathering.
