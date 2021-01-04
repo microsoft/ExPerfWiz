@@ -37,7 +37,7 @@ Circular| Enabled or Disable circular logging|Disabled
 Duration| How long should the performance data be collected|08:00:00
 FolderPath|Output Path for performance logs|NA
 Interval|How often the performance data should be collected.|5s
-MaxSize|Maximum size of the perfmon log in MegaBytes|250Mb
+MaxSize|Maximum size of the perfmon log in MegaBytes (256-4096)|256Mb
 Name|The name of the data collector set|ExPerfwiz
 Quiet|Suppresses screen Output|False
 Server|Name of the server where the perfmon collector should be created|Local Machine

@@ -117,7 +117,7 @@ Function New-ExPerfwiz {
         [int]
         $Interval = 5,
     
-        [ValidateRange(50, 1024)]
+        [ValidateRange(256, 4096)]
         [int]
         $MaxSize = 256,
 
