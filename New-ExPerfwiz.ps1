@@ -139,22 +139,7 @@ Function New-ExPerfwiz {
         [switch]
         $Threads = $false
     )
-
     
-    # Expand any variables that made it thru the $folderpath
-    $FolderPath = $ExecutionContext.InvokeCommand.ExpandString($FolderPath)
-    
-    
-    # Validate the folder path
-    if (Test-Path $FolderPath -PathType Container) {}
-    else {
-        Throw ("Path provided " + $FolderPath + " doesn't exist or isn't a folder. On the local system.")
-    }    
-
-    Out-LogFile -string ("Logging Actions to " + (join-path $env:LOCALAPPDATA experfwiz.log)) -quiet $Quiet
-    Out-LogFile -String $MyInvocation.Line -quiet $Quiet
-    Out-LogFile -String ("Output Path " + $FolderPath) -quiet $Quiet
-
     ### Validate Template ###
 
     # Build path to templates
@@ -231,14 +216,10 @@ Function New-ExPerfwiz {
     else {}
 
     # Write the XML to disk
-    $xmlfile = Join-Path $FolderPath ExPerfwiz.xml
+    $xmlfile = Join-Path $env:TEMP ExPerfwiz.xml
     Out-LogFile -string ("Writing Configuration to: " + $xmlfile) -quiet $Quiet
     $XML.Save($xmlfile)
-
-    # <Counter> - Validate Counters - not sure if we need to do this ... windows seems to just handle if they aren't there in the XML
-    ##### Schedule - Start and Stop Time????
-    
-    Out-Logfile -string ("Importing Collector Set " + $Name + " for " + $server) -quiet $Quiet
+    Out-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server) -quiet $Quiet
     
     # Import the XML with our configuration
     [string]$logman = logman import -xml $xmlfile -name $Name -s $server
