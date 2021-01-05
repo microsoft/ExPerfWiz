@@ -11,7 +11,7 @@
 	<LatestOutputLocation>
 	</LatestOutputLocation>
 	<Name>ExPefwiz Test</Name>
-	<OutputLocation>C:\Temp\experfwiz\GAMER_20200911-000001</OutputLocation>
+	<OutputLocation>C:\Temp\experfwiz</OutputLocation>
 	<RootPath>C:\Temp\experfwiz</RootPath> 
 	<Segment>0</Segment>
 	<SegmentMaxDuration>28800</SegmentMaxDuration>
@@ -22,7 +22,7 @@
 	<Subdirectory>
 	</Subdirectory>
 	<SubdirectoryFormat>3</SubdirectoryFormat>
-	<SubdirectoryFormatPattern>yyyyMMdd\-NNNNNN</SubdirectoryFormatPattern>
+	<SubdirectoryFormatPattern>yyyyMMdd\_HHmmss</SubdirectoryFormatPattern>
 	<Task>
 	</Task>
 	<TaskRunAsSelf>0</TaskRunAsSelf>
