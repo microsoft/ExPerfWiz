@@ -138,13 +138,35 @@ Function New-ExPerfwiz {
 
         [switch]
         $Threads = $false
+        <#
+
+        Commenting this out for now ... need to implement the task creation process first
+
+        [string]
+        $StartDate,
+
+        [string]
+        $EndDate,
+
+        [string]
+        $StartTime
+        #>
     )
+
+    ### Validate Date Time ###
+    $ErrorActionPreference = "Stop"
+    if (![string]::IsNullOrEmpty($StartDate)) { $DateToStart = Get-Date $StartDate }
+    
+    if (![string]::IsNullOrEmpty($EndDate)) { $DateToEnd = Get-Date $EndDate }
+    
+    if (![string]::IsNullOrEmpty($StartTime)) { $TimeToStart = Get-Date $StartTime }
+    $ErrorActionPreference = "Continue"
+
     
     ### Validate Template ###
 
     # Build path to templates
     $templatePath = join-path (split-path (Get-Module experfwiz).path -Parent) Templates
-
 
     # If no template provided then we need to ask the end user for which one to use
     While ([string]::IsNullOrEmpty($Template)) {
@@ -164,7 +186,7 @@ Function New-ExPerfwiz {
         # Get the selection from the user
         $selection = Read-Host ("`nChoose Template (1-" + $i + ")")
 
-        # Put the selected xml it into template
+        # Put the selected xml into template
         $Template = $templatesToChoose[($selection - 1)].FullName
     }
 
@@ -197,11 +219,42 @@ Function New-ExPerfwiz {
     # Sample Interval
     $XML.DataCollectorSet.PerformanceCounterDataCollector.SampleInterval = [string]$Interval
 
-    # Make sure the schedule is turned off
-    $XML.DataCollectorSet.SchedulesEnabled = "0"
+    ## Implement schedule
+    ## Scenarios:
+    ## 1) Start time with Duration
+    ## 2) Start time with end time
+    ## 3) No Start time with end time -- Invalid
+    ## 4) Duration with no time
+
+    # No start time value set so we are just using duration (Scenario 4)
+    if ([string]::IsNullOrEmpty($StartDate)) {
+        # Make sure the schedule is turned off
+        $XML.DataCollectorSet.SchedulesEnabled = "0"
+        Out-LogFile -string ("Setting scehdule to disabled") -quiet $Quiet
+    }
+    # Need to set the start / end time (Scenario 1 & 2)
+    else {
+
+        # Set the start date
+        $xml.DataCollectorSet.Schedule.StartDate = [string](Get-Date $DateToStart -format "d")
+
+        # If we have an end date set it
+        if ([string]::IsNullOrEmpty($EndDate)) {}
+        else {
+            $xml.DataCollectorSet.Schedule.EndDate = [string](Get-Date $DateToEnd -format "d")
+        }
+
+        # Set the start time
+        if ([string]::IsNullOrEmpty($StartTime)) {
+            $xml.DataCollectorSet.Schedule.StartTime = [string](Get-Date 00:00:00 -format "t")
+        }
+        else {
+            $xml.DataCollectorSet.Schedule.StartTime = [string](Get-Date $TimeToStart -format "t")
+        }
+    }    
 
     # If -threads is specified we need to add it to the counter set
-    If ($Threads){
+    If ($Threads) {
 
         Out-LogFile -string "Adding threads to counter set" -quiet $Quiet
 
@@ -235,7 +288,7 @@ Function New-ExPerfwiz {
     }    
 
     # Need to start the counter set if asked to do so
-    If ($StartOnCreate){
+    If ($StartOnCreate) {
         Start-ExPerfwiz -server $Server -Name $Name -quiet $Quiet
     }
     else {}
