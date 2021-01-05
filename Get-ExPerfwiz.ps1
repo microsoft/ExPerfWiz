@@ -17,9 +17,6 @@ Function Get-ExPerfwiz {
 
     Default LocalHost
 
-    .PARAMETER Quiet
-    Suppresses output to the screen
-
 	.OUTPUTS
     Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file 
 	
@@ -34,18 +31,17 @@ Function Get-ExPerfwiz {
     Get-ExPerfwiz -Name "My Collector Set" -Server RemoteServer-01
 
     #>
+    [cmdletbinding()]
     param (
         [string]
         $Name = "Experfwiz",
 
         [string]
-        $Server = $env:ComputerName,
+        $Server = $env:ComputerName
 
-        [switch]
-        $Quiet = $false
     )
     
-    Out-LogFile -string ("Getting ExPerfwiz: " + $server) -quiet $Quiet
+    Out-LogFile -string ("Getting ExPerfwiz: " + $server)
     
     # Get the experfwiz counter set
     $logman = logman query -name $Name -s $server
@@ -95,8 +91,8 @@ Function Get-ExPerfwiz {
         # since we got the data collector set was not found do nothing
     }
     else {
-        Out-LogFile "[ERROR] - Unable to Get collector" -quiet $Quiet
-        Out-LogFile $logman -quiet $Quiet
+        Out-LogFile "[ERROR] - Unable to Get collector"
+        Out-LogFile $logman 
         Throw $logman
     }
 }

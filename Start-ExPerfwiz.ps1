@@ -17,9 +17,6 @@ Function Start-ExPerfwiz {
 
     Default LocalHost
 
-    .PARAMETER Quiet
-    Suppresses output to the screen
-
 	.OUTPUTS
      Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file   
      
@@ -34,29 +31,27 @@ Function Start-ExPerfwiz {
     Start-ExPerfwiz -Name "My Collector Set" -Server RemoteServer-01
 
     #>
+    [cmdletbinding()]
     param (
         [string]
         $Name = "Experfwiz",
         
         [string]
-        $Server = $env:ComputerName,
-
-        [switch]
-        $Quiet = $false
-    )
+        $Server = $env:ComputerName
+            )
     
-    Out-LogFile -string ("Starting ExPerfwiz: " + $server) -quiet $Quiet
+    Out-LogFile -string ("Starting ExPerfwiz: " + $server) 
     
     # Remove the experfwiz counter set
     [string]$logman = logman start -name $Name -s $server
 
     # Check if we have an error and throw and error if needed.
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Out-LogFile "ExPerfwiz Started" -quiet $Quiet
+        Out-LogFile "ExPerfwiz Started" 
     }
     else {
-        Out-LogFile "[ERROR] - Unable to Start Collector" -quiet $Quiet
-        Out-LogFile $logman -quiet $Quiet
+        Out-LogFile "[ERROR] - Unable to Start Collector" 
+        Out-LogFile $logman 
         Throw $logman
     }
 }

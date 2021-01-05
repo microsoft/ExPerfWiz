@@ -17,11 +17,6 @@ Function Remove-ExPerfwiz {
 
     Default LocalHost
     
-    .PARAMETER Quiet
-    Suppresses output to the screen
-
-    Default False
-
     .OUTPUTS
     Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file   
 	
@@ -37,31 +32,29 @@ Function Remove-ExPerfwiz {
 
 
     #>
-
+    [cmdletbinding()]
     param (
 
         [string]
         $Name = "Experfwiz",
 
         [string]
-        $Server = $env:ComputerName,
+        $Server = $env:ComputerName
 
-        [switch]
-        $Quiet = $false
     )
     
-    Out-LogFile -string ("Removing Experfwiz for: " + $server) -quiet $Quiet
+    Out-LogFile -string ("Removing Experfwiz for: " + $server) 
     
     # Remove the experfwiz counter set
     [string]$logman = logman delete -name $Name -s $server
 
     # Check if we have an error and throw and error if needed.
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Out-LogFile "ExPerfwiz removed" -quiet $Quiet
+        Out-LogFile "ExPerfwiz removed" 
     }
     else {
-        Out-LogFile "[ERROR] - Unable to remove Collector" -quiet $Quiet
-        Out-LogFile $logman -quiet $Quiet
+        Out-LogFile "[ERROR] - Unable to remove Collector" 
+        Out-LogFile $logman 
         Throw $logman
     }
 }

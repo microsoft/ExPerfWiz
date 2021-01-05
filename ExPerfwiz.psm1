@@ -22,9 +22,7 @@ Function Out-LogFile {
     Param 
     ( 
         [Parameter(Mandatory = $true)]
-        [string]$String,
-        [Parameter(Mandatory = $true)]
-        [bool]$Quiet
+        [string]$String
     )
 	
     # Get our log file path
@@ -38,7 +36,7 @@ Function Out-LogFile {
 
     # Write everything to our log file and the screen
     $logstring | Out-File -FilePath $LogFile -Append
-    if (!$Quiet) { Write-Output  $logstring}
+    Write-Verbose  $logstring
 }
 
 Function Convert-OnOffBool {

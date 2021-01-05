@@ -42,11 +42,6 @@ Function New-ExPerfwiz {
     
     Default is ExPerfwiz
 
-    .PARAMETER Quiet
-    Suppresses output to the screen and only sends it to the log file.
-
-    Default is False 
-
     .PARAMETER Server
     Name of the server where the perfmon collector should be created
 
@@ -103,6 +98,7 @@ Function New-ExPerfwiz {
     #>
 
     ### Creates a new experfwiz collector
+    [cmdletbinding()]
     Param(
         [bool]
         $Circular = $false,
@@ -123,9 +119,6 @@ Function New-ExPerfwiz {
 
         [string]
         $Name = "ExPerfwiz",
-
-        [switch]
-        $Quiet = $false,
 
         [string]
         $Server = $env:ComputerName,
@@ -170,7 +163,7 @@ Function New-ExPerfwiz {
 
     # If no template provided then we need to ask the end user for which one to use
     While ([string]::IsNullOrEmpty($Template)) {
-        Out-LogFile -string ("Searching template path: " + $templatePath) -quiet $Quiet
+        Out-LogFile -string ("Searching template path: " + $templatePath) 
         $templatesToChoose = Get-ChildItem -Path $templatePath  -Filter *.xml
         Write-Output "`nPlease choose a Template:"
 
@@ -192,7 +185,7 @@ Function New-ExPerfwiz {
 
     # Test the template path and log it as good or throw an error
     If (Test-Path $Template) {
-        Out-LogFile -string ("Using Template:" + $Template) -quiet $Quiet
+        Out-LogFile -string ("Using Template:" + $Template) 
     }
     Else {
         Throw "Cannot find template xml file provided.  Please provide a valid Perfmon template file."
@@ -230,7 +223,7 @@ Function New-ExPerfwiz {
     if ([string]::IsNullOrEmpty($StartDate)) {
         # Make sure the schedule is turned off
         $XML.DataCollectorSet.SchedulesEnabled = "0"
-        Out-LogFile -string ("Setting scehdule to disabled") -quiet $Quiet
+        Out-LogFile -string ("Setting scehdule to disabled") 
     }
     # Need to set the start / end time (Scenario 1 & 2)
     else {
@@ -256,7 +249,7 @@ Function New-ExPerfwiz {
     # If -threads is specified we need to add it to the counter set
     If ($Threads) {
 
-        Out-LogFile -string "Adding threads to counter set" -quiet $Quiet
+        Out-LogFile -string "Adding threads to counter set" 
 
         # Create and set the XML element
         $threadCounter = $XML.CreateElement("Counter")
@@ -270,26 +263,26 @@ Function New-ExPerfwiz {
 
     # Write the XML to disk
     $xmlfile = Join-Path $env:TEMP ExPerfwiz.xml
-    Out-LogFile -string ("Writing Configuration to: " + $xmlfile) -quiet $Quiet
+    Out-LogFile -string ("Writing Configuration to: " + $xmlfile) 
     $XML.Save($xmlfile)
-    Out-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server) -quiet $Quiet
+    Out-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server) 
     
     # Import the XML with our configuration
     [string]$logman = logman import -xml $xmlfile -name $Name -s $server
     
     # Check if we generated and error on import
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Out-LogFile -string "Experfwiz imported." -Quiet $Quiet
+        Out-LogFile -string "Experfwiz imported." 
     }
     else {
-        Out-LogFile -string "[ERROR] - Problem importing perfwiz:" -quiet $Quiet
-        Out-LogFile -string $logman -quiet $Quiet
+        Out-LogFile -string "[ERROR] - Problem importing perfwiz:" 
+        Out-LogFile -string $logman 
         Throw $logman
     }    
 
     # Need to start the counter set if asked to do so
     If ($StartOnCreate) {
-        Start-ExPerfwiz -server $Server -Name $Name -quiet $Quiet
+        Start-ExPerfwiz -server $Server -Name $Name 
     }
     else {}
 

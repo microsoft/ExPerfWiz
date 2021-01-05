@@ -12,9 +12,9 @@ If the server where data is being gathered doesn't have access to the internet d
 
 * Install the module to another machine in the org that does have access and use the -server switch
 * Download the module from https://github.com/microsoft/ExPerfWiz/releases
-* Extract the Zip file to a known location
-* From powershell in the extracted path run `Import-Module experfwiz.psd1`
-* Change to a different directory than the one with the psd1 file
+  * Extract the Zip file to a known location
+  * From powershell in the extracted path run `Import-Module experfwiz.psd1`
+  * Change to a different directory than the one with the psd1 file
 
 # How to use
 The Module version of Experfwiz provides the following cmdlets to manage the Data Gathering.
@@ -26,7 +26,6 @@ Switch | Description|Default
 -------|-------|-------
 Name|Name of the Data Collector set|Experfwiz
 Server|Name of the Server |Local Machine
-Quiet|Suppress screen Output|False
 
 
 ### `New-ExPerfwiz`
@@ -40,7 +39,6 @@ FolderPath|Output Path for performance logs|NA
 Interval|How often the performance data should be collected.|5s
 MaxSize|Maximum size of the perfmon log in MegaBytes (256-4096)|256Mb
 Name|The name of the data collector set|ExPerfwiz
-Quiet|Suppresses screen Output|False
 Server|Name of the server where the perfmon collector should be created|Local Machine
 StartOnCreate|Starts the counter set as soon as it is created|False
 Template| XML perfmon template file that should be loaded to create the data collector set.|Prompt
@@ -54,7 +52,6 @@ Switch | Description|Default
 -------|-------|-------
 Name|Name of the Perfmon Collector set|ExPerfwiz
 Server|Name of the server to remove the collector set from|Local Machine
-Quiet|Suppresses output to the screen|False
 
 ### `Start-ExPerfwiz`
 Starts an ExPerfwiz data collector set
@@ -63,7 +60,6 @@ Switch | Description|Default
 -------|-------|-------
 Name|The Name of the Data Collector set to start|ExPerfwiz
 Server|Name of the remote server to start the data collector set on.|Local Machine
-Quiet|Suppresses output to the screen|False
 
 ### `Stop-ExPerfwiz`
 Stops an ExPerfwiz data collector set
@@ -72,7 +68,6 @@ Switch | Description|Default
 -------|-------|-------
 Name|Name of the data collector set to stop.|ExPerfwiz
 Server|Name of the server to stop the collector set on.|Local Machine
-Quiet|Suppresses output to the screen|False
 
 # Example Usage
 
