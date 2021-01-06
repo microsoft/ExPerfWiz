@@ -22,7 +22,7 @@
 	<Subdirectory>
 	</Subdirectory>
 	<SubdirectoryFormat>3</SubdirectoryFormat>
-	<SubdirectoryFormatPattern>yyyyMMdd</SubdirectoryFormatPattern>
+	<SubdirectoryFormatPattern></SubdirectoryFormatPattern>
 	<Task>
 	</Task>
 	<TaskRunAsSelf>0</TaskRunAsSelf>

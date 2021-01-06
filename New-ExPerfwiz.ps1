@@ -198,7 +198,9 @@ Function New-ExPerfwiz {
     # Set Output Location
     $XML.DataCollectorSet.OutputLocation = $FolderPath
     $XML.DataCollectorSet.RootPath = $FolderPath
+    $XML.DataCollectorSet.Subdirectory = ($Name -replace '\s+','')
     $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = ($Name -replace '\s+','')
+    $XML.DataCollectorSet.PerformanceCounterDataCollector.Name = ($Name -replace '\s+','')
 
     # Set overall Duration
     $XML.DataCollectorSet.Duration = [string]$Duration.TotalSeconds
