@@ -2,7 +2,7 @@
 <DataCollectorSet>
 	<Status>0</Status>
 	<Duration>0</Duration>
-	<Description>ExPerfwiz Test Template</Description>
+	<Description>ExPerfwiz Exchange 2010 Full</Description>
 	<DescriptionUnresolved>
 	</DescriptionUnresolved>
 	<DisplayName>ExPerfWiz</DisplayName>
@@ -22,7 +22,7 @@
 	<Subdirectory>
 	</Subdirectory>
 	<SubdirectoryFormat>3</SubdirectoryFormat>
-	<SubdirectoryFormatPattern>yyyyMMdd\_HHmmss</SubdirectoryFormatPattern>
+	<SubdirectoryFormatPattern>yyyyMMdd</SubdirectoryFormatPattern>
 	<Task>
 	</Task>
 	<TaskRunAsSelf>0</TaskRunAsSelf>
@@ -38,7 +38,7 @@
 		<Name>ExPefwiz</Name>
 		<FileName>ExPefwiz</FileName>
 		<FileNameFormat>3</FileNameFormat>
-		<FileNameFormatPattern>MMdd\-N</FileNameFormatPattern>
+		<FileNameFormatPattern>\_ddMMyy\_HHmm\_z\Z\_NNN</FileNameFormatPattern>
 		<LogAppend>-1</LogAppend>
 		<LogCircular>0</LogCircular>
 		<LogOverwrite>0</LogOverwrite>

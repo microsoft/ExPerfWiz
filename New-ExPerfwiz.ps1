@@ -63,7 +63,6 @@ Function New-ExPerfwiz {
 
     Default is False
     
-
     .OUTPUTS
     Creates a data collector set in Perfmon based on the provided XML file
 
@@ -100,8 +99,8 @@ Function New-ExPerfwiz {
     ### Creates a new experfwiz collector
     [cmdletbinding()]
     Param(
-        [bool]
-        $Circular = $false,
+        [switch]
+        $Circular,
     
         [timespan]
         $Duration = [timespan]::Parse('8:00:00'),
@@ -147,14 +146,14 @@ Function New-ExPerfwiz {
     )
 
     ### Validate Date Time ###
-    $ErrorActionPreference = "Stop"
+    <# $ErrorActionPreference = "Stop"
     if (![string]::IsNullOrEmpty($StartDate)) { $DateToStart = Get-Date $StartDate }
     
     if (![string]::IsNullOrEmpty($EndDate)) { $DateToEnd = Get-Date $EndDate }
     
     if (![string]::IsNullOrEmpty($StartTime)) { $TimeToStart = Get-Date $StartTime }
     $ErrorActionPreference = "Continue"
-
+    #>
     
     ### Validate Template ###
 
@@ -199,15 +198,29 @@ Function New-ExPerfwiz {
     # Set Output Location
     $XML.DataCollectorSet.OutputLocation = $FolderPath
     $XML.DataCollectorSet.RootPath = $FolderPath
+    $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = ($Name -replace '\s+','')
 
-    # Set Duration
-    $XML.DataCollectorSet.SegmentMaxDuration = [string]$Duration.TotalSeconds
+    # Set overall Duration
+    $XML.DataCollectorSet.Duration = [string]$Duration.TotalSeconds
+
+    # Set segment to restart when limit reached
+    $XML.DataCollectorSet.Segment = "-1"
+
+    # Make sure segment duration is NOT set we want overall duration to win here
+    $XML.DataCollectorSet.SegmentMaxDuration = "0"
 
     # Set Max File size
     $XML.DataCollectorSet.SegmentMaxSize = [string]$MaxSize
 
     # Circular logging state
-    $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = [string]([int]$Circular * -1)
+    if ($Circular -eq $false){
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "-1"
+    }
+    # Need to update the file name to reflect if it is circular
+    else {
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "0"
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = (($Name -replace '\s+','') + "_Circular")
+    }    
 
     # Sample Interval
     $XML.DataCollectorSet.PerformanceCounterDataCollector.SampleInterval = [string]$Interval
