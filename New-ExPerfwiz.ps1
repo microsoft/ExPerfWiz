@@ -8,6 +8,8 @@ Function New-ExPerfwiz {
     Creates a performance monitor data collector set from an XML template for the purpose of investigating server performance issues.
 
     Allows for configuration of the counter set at the time of running the creation command.
+
+    Will overwrite any existing Counter Sets that have the same name.
         
     .PARAMETER Circular
     Enabled or Disable circular logging
@@ -198,9 +200,9 @@ Function New-ExPerfwiz {
     # Set Output Location
     $XML.DataCollectorSet.OutputLocation = $FolderPath
     $XML.DataCollectorSet.RootPath = $FolderPath
-    $XML.DataCollectorSet.Subdirectory = ($Name -replace '\s+','')
-    $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = ($Name -replace '\s+','')
-    $XML.DataCollectorSet.PerformanceCounterDataCollector.Name = ($Name -replace '\s+','')
+    $XML.DataCollectorSet.Subdirectory = ($Name -replace '\s+', '')
+    $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = ($Name -replace '\s+', '')
+    $XML.DataCollectorSet.PerformanceCounterDataCollector.Name = ($Name -replace '\s+', '')
 
     # Set overall Duration
     $XML.DataCollectorSet.Duration = [string]$Duration.TotalSeconds
@@ -215,13 +217,13 @@ Function New-ExPerfwiz {
     $XML.DataCollectorSet.SegmentMaxSize = [string]$MaxSize
 
     # Circular logging state
-    if ($Circular -eq $false){
+    if ($Circular -eq $false) {
         $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "-1"
     }
     # Need to update the file name to reflect if it is circular
     else {
         $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "0"
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = (($Name -replace '\s+','') + "_Circular")
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = (($Name -replace '\s+', '') + "_Circular")
     }    
 
     # Sample Interval
@@ -284,12 +286,33 @@ Function New-ExPerfwiz {
     
     # Import the XML with our configuration
     [string]$logman = logman import -xml $xmlfile -name $Name -s $server
+
+    # Control if we are going to throw an error
+    $ShouldTrow = $True
     
     # Check if we generated and error on import
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
         Out-LogFile -string "Experfwiz imported." 
+        $ShouldTrow = $false
     }
-    else {
+    # We have an error so handle it
+    elseif (![string]::IsNullOrEmpty(($logman | select-string "Data Collector Set already exists."))) {
+        
+        # Remove the counter set 
+        Remove-ExPerfwiz -Name $Name -Server $Server
+
+        # Try to create it again
+        [string]$logman = logman import -xml $xmlfile -name $Name -s $server
+
+        # Check again if we have an error
+        If ([string]::isnullorempty(($logman | select-string "Error:"))) {
+            Out-LogFile -string "Experfwiz imported." 
+            $ShouldTrow = $false
+        }            
+    }
+    
+    # If shouldthrow is still true then we have an error and need to show it
+    if ($ShouldTrow) {
         Out-LogFile -string "[ERROR] - Problem importing perfwiz:" 
         Out-LogFile -string $logman 
         Throw $logman
@@ -300,5 +323,8 @@ Function New-ExPerfwiz {
         Start-ExPerfwiz -server $Server -Name $Name 
     }
     else {}
+
+    # Display back the newly created object
+    Get-ExPerfwiz -Name $Name -Server $Server
 
 }

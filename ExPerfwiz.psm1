@@ -19,6 +19,7 @@
 
 # Writes output to a log file with a time date stamp
 Function Out-LogFile {
+    [cmdletbinding()]
     Param 
     ( 
         [Parameter(Mandatory = $true)]
@@ -40,13 +41,14 @@ Function Out-LogFile {
 }
 
 Function Convert-OnOffBool {
+    [cmdletbinding()]
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$tocompare
     )
 
     switch ($tocompare) {
-        On {return $true}
-        Default {return $false}
+        On { return $true }
+        Default { return $false }
     }
 }

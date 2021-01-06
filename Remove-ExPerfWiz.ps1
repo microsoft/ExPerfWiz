@@ -40,13 +40,12 @@ Function Remove-ExPerfwiz {
 
         [string]
         $Server = $env:ComputerName
-
     )
     
     Out-LogFile -string ("Removing Experfwiz for: " + $server) 
     
     # Remove the experfwiz counter set
-    [string]$logman = logman delete -name $Name -s $server
+    [string]$logman = logman delete -name $Name -s $server    
 
     # Check if we have an error and throw and error if needed.
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {

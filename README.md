@@ -30,6 +30,7 @@ Server|Name of the Server |Local Machine
 
 ### `New-ExPerfwiz`
 Creates an ExPerfwiz data collector set
+Will overwrite any existing sets with the same name
 
 Switch | Description|Default
 -------|-------|-------
