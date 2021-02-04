@@ -94,9 +94,24 @@ Function Remove-PerfWizScheduledTask {
         $Server
     )
 
+    # Remove scheduled task using schtasks
+    $taskRemove = SCHTASKS /DELETE /S $server /TN $name /F 2>&1
 
-
-
+    # if success record that
+    if (![string]::IsNullOrEmpty(($taskRemove | select-string "SUCCESS:"))) {
+        Out-LogFile -string "Removed task $name from server $server"
+    }
+    # Check if we didn't find the task and record that
+    elseif (![string]::IsNullOrEmpty(($taskRemove | select-string "The system cannot find the file specified"))) {
+        Out-LogFile -string "Task $name not found on server $server"
+    }
+    # all other cases throw error
+    else {
+        Out-LogFile -string "[ERROR] - Removing Scheduled Task" 
+        Out-LogFile -string [string]$TaskResult
+        Throw "UNABLE TO REMOVE SCHEDULED TASK: $TaskResult"
+    
+    }
 }
 
 Function Get-PerfWizScheduledTask {
