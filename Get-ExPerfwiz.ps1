@@ -10,7 +10,7 @@ Function Get-ExPerfwiz {
     .PARAMETER Name
     Name of the Data Collector set
 
-    Default ExPerfwiz
+    Default Exchange_Perfwiz
 
     .PARAMETER Server
     Name of the server

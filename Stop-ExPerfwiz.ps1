@@ -10,7 +10,7 @@ Function Stop-ExPerfwiz {
     .PARAMETER Name
     Name of the data collector set to stop.
 
-    Default ExPerfwiz
+    Default Exchange_Perfwiz
 
     .PARAMETER Server
     Name of the server to stop the collector set on.

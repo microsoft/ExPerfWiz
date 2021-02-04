@@ -10,7 +10,7 @@ Function Remove-ExPerfwiz {
     .PARAMETER Name
     Name of the Perfmon Collector set
 
-    Default ExPerfwiz
+    Default Exchange_Perfwiz
 
     .PARAMETER Server
     Name of the server to remove the collector set from

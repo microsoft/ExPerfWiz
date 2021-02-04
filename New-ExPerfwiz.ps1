@@ -42,7 +42,7 @@ Function New-ExPerfwiz {
     .PARAMETER Name
     The name of the data collector set
     
-    Default is ExPerfwiz
+    Default is Exchange_Perfwiz
 
     .PARAMETER Server
     Name of the server where the perfmon collector should be created

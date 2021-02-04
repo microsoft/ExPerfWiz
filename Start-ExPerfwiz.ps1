@@ -10,7 +10,7 @@ Function Start-ExPerfwiz {
     .PARAMETER Name
     The Name of the Data Collector set to start
 
-    Default ExPerfwiz
+    Default Exchange_Perfwiz
 
     .PARAMETER Server
     Name of the remote server to start the data collector set on.
