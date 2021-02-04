@@ -56,4 +56,8 @@ Function Remove-ExPerfwiz {
         Out-LogFile $logman 
         Throw $logman
     }
+
+    # Remove the scheduled task if it is there
+    Remove-PerfWizScheduledTask -Name $Name -Server $Server
+
 }
