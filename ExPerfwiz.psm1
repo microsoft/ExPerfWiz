@@ -98,3 +98,31 @@ Function Remove-PerfWizScheduledTask {
 
 
 }
+
+Function Get-PerfWizScheduledTask {
+    [CmdletBinding()]
+    param (
+        [string]
+        $Name,
+
+        [string]
+        $Server
+    )
+
+    $taskFound = SCHTASKS /QUERY /TN $name /S $Server /FO csv 2>&1
+
+    # If we found a task with that name return True
+    if (![string]::IsNullOrEmpty(($taskFound | select-string "Taskname"))) {
+        return true 
+    }
+    # if we didn't find a task with that name return false
+    elseif (![string]::IsNullOrEmpty(($taskFound | select-string "The system cannot find the file specified."))) { 
+        return false 
+    }
+    # If we got an error throw
+    else {
+        Out-LogFile -string "[ERROR] - Getting Scheduled Task" 
+        Out-LogFile -string [string]$TaskResult
+        Throw "UNABLE TO GET SCHEDULED TASK: $TaskResult"
+    }
+}
