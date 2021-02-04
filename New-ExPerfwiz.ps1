@@ -299,7 +299,7 @@ Function New-ExPerfwiz {
     # Need to set the start / end time (Scenario 1)
     else {
         # Create a scheduled task with the listed start time
-        New-PerfWizScheduledTask -Name $Name -Server $Server -StartTime (Get-Date $StartTime -format "t")
+        New-PerfWizScheduledTask -Name $Name -Server $Server -StartTime (Get-Date $StartTime -UFormat %R)
     }    
 
     # Need to start the counter set if asked to do so
