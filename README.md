@@ -24,7 +24,7 @@ Gets ExPerfwiz data collector sets
 
 Switch | Description|Default
 -------|-------|-------
-Name|Name of the Data Collector set|Experfwiz
+Name|Name of the Data Collector set|Exchange_Perfwiz
 Server|Name of the Server |Local Machine
 
 
@@ -38,10 +38,11 @@ Circular| Enabled or Disable circular logging|Disabled
 Duration| How long should the performance data be collected|08:00:00
 FolderPath|Output Path for performance logs|NA
 Interval|How often the performance data should be collected.|5s
-MaxSize|Maximum size of the perfmon log in MegaBytes (256-4096)|256Mb
-Name|The name of the data collector set|ExPerfwiz
+MaxSize|Maximum size of the perfmon log in MegaBytes (256-4096)|1024Mb
+Name|The name of the data collector set|Exchange_Perfwiz
 Server|Name of the server where the perfmon collector should be created|Local Machine
 StartOnCreate|Starts the counter set as soon as it is created|False
+StartTime|Daily time to start perfmon counter|NA
 Template| XML perfmon template file that should be loaded to create the data collector set.|Prompt
 Threads|Includes threads in the counter set.|False
 
@@ -51,7 +52,7 @@ Removes an ExPerfwiz data collector set
 
 Switch | Description|Default
 -------|-------|-------
-Name|Name of the Perfmon Collector set|ExPerfwiz
+Name|Name of the Perfmon Collector set|Exchange_Perfwiz
 Server|Name of the server to remove the collector set from|Local Machine
 
 ### `Start-ExPerfwiz`
@@ -59,7 +60,7 @@ Starts an ExPerfwiz data collector set
 
 Switch | Description|Default
 -------|-------|-------
-Name|The Name of the Data Collector set to start|ExPerfwiz
+Name|The Name of the Data Collector set to start|Exchange_Perfwiz
 Server|Name of the remote server to start the data collector set on.|Local Machine
 
 ### `Stop-ExPerfwiz`
@@ -67,7 +68,7 @@ Stops an ExPerfwiz data collector set
 
 Switch | Description|Default
 -------|-------|-------
-Name|Name of the data collector set to stop.|ExPerfwiz
+Name|Name of the data collector set to stop.|Exchange_Perfwiz
 Server|Name of the server to stop the collector set on.|Local Machine
 
 # Example Usage
