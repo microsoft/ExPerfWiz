@@ -52,3 +52,49 @@ Function Convert-OnOffBool {
         Default { return $false }
     }
 }
+
+# Create a scheduled task to run experfwiz
+Function New-PerfWizScheduledTask {
+    [CmdletBinding()]
+    param (
+        
+        [String]
+        $Name,
+
+        [string]
+        $StartTime,
+
+        [string]
+        $Server
+    )
+
+    # Going to use schtasks.exe for this instead of New-ScheduledTask
+    # New-ScheduledTask is not support on 2012R2 it appears; only shows in Win10 or 2016+
+    Out-LogFile -String "Creating Scehduled Task $Name"
+    # Create the task ... 2>&1 used to redirect schtasks stderr output to stdopt so it can be processed in PS
+    $TaskResult = SCHTASKS /Create /S $Server /RU "SYSTEM" /SC DAILY /TN $Name /TR "logman.exe start $name" /ST $starttime /F 2>&1
+
+    # Check if we have an error
+    if (![string]::IsNullOrEmpty(($TaskResult | select-string "Error:"))) {
+        Out-LogFile -string "[ERROR] - Creating Scheduled Task" 
+        Out-LogFile -string [string]$TaskResult
+        Throw "UNABLE TO CREATE SCHEDULED TASK: $TaskResult"
+
+    }
+
+}
+
+Function Remove-PerfWizScheduledTask {
+    [CmdletBinding()]
+    param (
+        [String]
+        $Name,
+
+        [string]
+        $Server
+    )
+
+
+
+
+}

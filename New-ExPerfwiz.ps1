@@ -119,7 +119,7 @@ Function New-ExPerfwiz {
         $MaxSize = 256,
 
         [string]
-        $Name = "ExPerfwiz",
+        $Name = "Exchange_Perfwiz",
 
         [string]
         $Server = $env:ComputerName,
@@ -131,20 +131,11 @@ Function New-ExPerfwiz {
         $Template,
 
         [switch]
-        $Threads = $false
-        <#
-
-        Commenting this out for now ... need to implement the task creation process first
-
-        [string]
-        $StartDate,
-
-        [string]
-        $EndDate,
+        $Threads = $false,
 
         [string]
         $StartTime
-        #>
+        
     )
 
     ### Validate Date Time ###
@@ -229,39 +220,14 @@ Function New-ExPerfwiz {
     # Sample Interval
     $XML.DataCollectorSet.PerformanceCounterDataCollector.SampleInterval = [string]$Interval
 
-    ## Implement schedule
-    ## Scenarios:
-    ## 1) Start time with Duration
-    ## 2) Start time with end time
-    ## 3) No Start time with end time -- Invalid
-    ## 4) Duration with no time
-
-    # No start time value set so we are just using duration (Scenario 4)
-    if ([string]::IsNullOrEmpty($StartDate)) {
-        # Make sure the schedule is turned off
+    # Make sure the XML schedule is set to reflect if we are setting up a scheduled task
+    if ([string]::IsNullOrEmpty($StartTime)) {
         $XML.DataCollectorSet.SchedulesEnabled = "0"
-        Out-LogFile -string ("Setting scehdule to disabled") 
     }
-    # Need to set the start / end time (Scenario 1 & 2)
     else {
+        $XML.DataCollectorSet.SchedulesEnabled = "1"
 
-        # Set the start date
-        $xml.DataCollectorSet.Schedule.StartDate = [string](Get-Date $DateToStart -format "d")
-
-        # If we have an end date set it
-        if ([string]::IsNullOrEmpty($EndDate)) {}
-        else {
-            $xml.DataCollectorSet.Schedule.EndDate = [string](Get-Date $DateToEnd -format "d")
-        }
-
-        # Set the start time
-        if ([string]::IsNullOrEmpty($StartTime)) {
-            $xml.DataCollectorSet.Schedule.StartTime = [string](Get-Date 00:00:00 -format "t")
-        }
-        else {
-            $xml.DataCollectorSet.Schedule.StartTime = [string](Get-Date $TimeToStart -format "t")
-        }
-    }    
+    }
 
     # If -threads is specified we need to add it to the counter set
     If ($Threads) {
@@ -287,7 +253,7 @@ Function New-ExPerfwiz {
     # Import the XML with our configuration
     [string]$logman = logman import -xml $xmlfile -name $Name -s $server
 
-    # Control if we are going to throw an error
+    # Control if we are going to throw an error after trying to create the perfmon
     $ShouldTrow = $True
     
     # Check if we generated and error on import
@@ -316,6 +282,24 @@ Function New-ExPerfwiz {
         Out-LogFile -string "[ERROR] - Problem importing perfwiz:" 
         Out-LogFile -string $logman 
         Throw $logman
+    }    
+
+    ## Implement Start time
+    # The schedule funcation of Perfmon is broken and won't actually start a perfmon
+    # So going to have to do this manually using logman start in a scheduled task
+    # Scenarios supported:
+    # 1) Start Perfmon at time X daily run for time outlined in rest of settings
+    # 2) Setup perfmon without scheduled start time
+
+    # No start time value set so we are just using duration (Scenario 2)
+    if ([string]::IsNullOrEmpty($StartTime)) {
+        # Make sure the schedule is turned off
+        Out-LogFile -string ("No Start time so not creating Scheduled Task") 
+    }
+    # Need to set the start / end time (Scenario 1)
+    else {
+        # Create a scheduled task with the listed start time
+        New-PerfWizScheduledTask -Name $Name -Server $Server -StartTime (Get-Date $StartTime -format "t")
     }    
 
     # Need to start the counter set if asked to do so

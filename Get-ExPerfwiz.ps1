@@ -34,7 +34,7 @@ Function Get-ExPerfwiz {
     [cmdletbinding()]
     param (
         [string]
-        $Name = "Experfwiz",
+        $Name = "Exchange_Perfwiz",
 
         [string]
         $Server = $env:ComputerName
