@@ -208,13 +208,13 @@ Function New-ExPerfwiz {
     $XML.DataCollectorSet.SegmentMaxSize = [string]$MaxSize
 
     # Circular logging state
-    if ($Circular -eq $false) {
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "-1"
+    if ($Circular) {
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "1"
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = (($Name -replace '\s+', '') + "_Circular")
     }
     # Need to update the file name to reflect if it is circular
     else {
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "0"
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = (($Name -replace '\s+', '') + "_Circular")
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "-1"
     }    
 
     # Sample Interval
