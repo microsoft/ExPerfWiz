@@ -25,6 +25,7 @@ steps:
         else { 
           write-host "New Version"
           git tag $version
+          git tag
           }
 
 - task: DeleteFiles@1
