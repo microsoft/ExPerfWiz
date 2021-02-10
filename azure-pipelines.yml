@@ -11,6 +11,11 @@ pool:
   vmImage: windows-latest
 
 steps:
+
+- checkout: self
+  clean: true
+  persistCredentials: true
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -26,7 +31,7 @@ steps:
           write-host "New Version"
           git tag $version
           git tag
-          git push origin HEAD:master
+          git push origin
       }
 
 - task: DeleteFiles@1
