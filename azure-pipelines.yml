@@ -26,10 +26,12 @@ steps:
 
 - task: DeleteFiles@1
   inputs:
+    SourceFolder: 
     Contents: |
-      '*.yml'
-      '.git'
-      '.gitignore'
+      *.ps1
+      *.yml
+      .git
+      .gitignore
 
 - task: ArchiveFiles@2
   inputs:
