@@ -26,8 +26,8 @@ steps:
           write-host "New Version"
           git tag $version
           git tag
-          git push origin
-          }
+          git push origin HEAD:master
+      }
 
 - task: DeleteFiles@1
   inputs:
