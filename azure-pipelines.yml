@@ -28,7 +28,6 @@ steps:
   inputs:
     SourceFolder: 
     Contents: |
-      *.ps1
       *.yml
       .git
       .gitignore
