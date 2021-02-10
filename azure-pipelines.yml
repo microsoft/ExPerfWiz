@@ -29,7 +29,7 @@ steps:
         if ((git tag) -contains $version) { write-host "Found Existing Version"}
         else { 
           write-host "New Version"
-          git tag $version
+          git tag -a $version -m "Release $version"
           git tag
           git push origin HEAD:master
       }
