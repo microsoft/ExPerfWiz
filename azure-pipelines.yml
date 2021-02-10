@@ -21,8 +21,11 @@ steps:
         ($psd1 | select-string 'moduleversion*') -match '([0-9].[0-9].[0-9])'
         $Version = $Matches.1
         Write-Host $Version
-        if ((git tag) -contains $version) { write-host "Found"}
-        else { write-host "Not found"}
+        if ((git tag) -contains $version) { write-host "Found Existing Version"}
+        else { 
+          write-host "New Version"
+          git tag $version
+          }
 
 - task: DeleteFiles@1
   inputs:
