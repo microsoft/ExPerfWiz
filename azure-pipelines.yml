@@ -26,6 +26,7 @@ steps:
           write-host "New Version"
           git tag $version
           git tag
+          gut push
           }
 
 - task: DeleteFiles@1
