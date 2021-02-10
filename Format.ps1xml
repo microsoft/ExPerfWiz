@@ -1,0 +1,44 @@
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>ExPerfWiz.Counter</Name>
+            <ViewSelectedBy>
+                <TypeName>ExPerfWiz.Counter</TypeName>
+            </ViewSelectedBy>
+
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Width>24</Width>
+                    </TableColumnHeader>
+					<TableColumnHeader>
+                        <Width>12</Width>
+                    </TableColumnHeader>
+					<TableColumnHeader>
+                        <Width>12</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Status</PropertyName>
+                            </TableColumnItem>
+							<TableColumnItem>
+                                <PropertyName>Schedules</PropertyName>
+                            </TableColumnItem>
+							<TableColumnItem>
+                                <PropertyName>OutputPath</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                 </TableRowEntries>
+            </TableControl>
+        </View>
+    </ViewDefinitions>
+	</Configuration>
+    
