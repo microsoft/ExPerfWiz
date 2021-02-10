@@ -29,6 +29,7 @@ steps:
         if ((git tag) -contains $version) { write-host "Found Existing Version"}
         else { 
           write-host "New Version"
+          git config --global user.name "AzureDevOps Agent"
           git tag $version
           git tag
           git push origin HEAD:master --force
