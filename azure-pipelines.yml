@@ -11,6 +11,16 @@ pool:
 
 steps:
 
+- pwsh: |
+
+  $psd1 = get-content experfwiz.psd1
+  ($psd1 | select-string 'moduleversion*') -match '([0-9].[0-9].[0-9])'
+  $Version = $Matches.1
+  Write-Host $Version
+
+displayName: "Getting Script Version information"
+
+
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
