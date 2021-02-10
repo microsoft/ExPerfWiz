@@ -32,7 +32,7 @@ steps:
           git config --global user.name "AzureDevOps Agent"
           git tag $version
           git tag
-          git push origin HEAD:master --force
+          git push origin $version
       }
 
 - task: DeleteFiles@1
