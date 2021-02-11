@@ -70,3 +70,11 @@ steps:
     SourceFolder: '$(Build.SourcesDirectory)'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/ExPerfWiz'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      Publish-Module -path '$(Build.ArtifactStagingDirectory)\Experfwiz' -nugetapikey $(PSGallery)
