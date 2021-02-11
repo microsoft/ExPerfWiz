@@ -30,8 +30,8 @@ steps:
         Write-Host $Version
         if ((git tag) -contains $version) { 
           write-host "Found Existing Version"
-          Get-ChildItem $(Build.SourcesDirectory)
-          Publish-Module -path "$(Build.SourcesDirectory)/experfwiz.psd1" -nugetapikey $(PSGallery)
+          cd $(Build.SourcesDirectory)
+          Publish-Module -name "ExPerfWiz" -nugetapikey $(PSGallery)
         }
         else { 
           write-host "New Version"
