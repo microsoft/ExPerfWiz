@@ -18,7 +18,6 @@ steps:
   clean: true
   persistCredentials: true
 
-steps:
 - script: echo $(psgallery) # uses macro syntax
 - script: echo $(psgallery) 
 
