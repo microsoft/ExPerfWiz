@@ -31,7 +31,7 @@ steps:
         if ((git tag) -contains $version) { 
           write-host "Found Existing Version"
           cd $(Build.SourcesDirectory)
-          Publish-Module -name "ExPerfWiz" -nugetapikey $(PSGallery)
+          Publish-Module -name "ExPerfWiz" -nugetapikey $(PSGallery) -whatif -verbose
         }
         else { 
           write-host "New Version"
@@ -39,7 +39,6 @@ steps:
           git tag $version
           git tag
           git push origin $version
-          
       }
 
 - task: DeleteFiles@1
