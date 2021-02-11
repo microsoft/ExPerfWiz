@@ -30,7 +30,8 @@ steps:
         Write-Host $Version
         if ((git tag) -contains $version) { 
           write-host "Found Existing Version"
-          Publish-Module -path '$(Build.SourcesDirectory)' -nugetapikey $(PSGallery)
+          Get-ChildItem $(Build.SourcesDirectory)
+          # Publish-Module -path $(Build.SourcesDirectory) -nugetapikey $(PSGallery)
         }
         else { 
           write-host "New Version"
