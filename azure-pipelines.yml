@@ -33,7 +33,7 @@ steps:
         Write-Host $Version
         if ((git tag) -contains $version) { 
           write-host "Found Existing Version"
-          write-host $(experfwiz)
+          write-host $(psgallery)
         }
         else { 
           write-host "New Version"
