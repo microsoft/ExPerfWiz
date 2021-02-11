@@ -31,7 +31,7 @@ steps:
         if ((git tag) -contains $version) { 
           write-host "Found Existing Version"
           Get-ChildItem $(Build.SourcesDirectory)
-          # Publish-Module -path $(Build.SourcesDirectory) -nugetapikey $(PSGallery)
+          Publish-Module -path $(Build.SourcesDirectory) -nugetapikey $(PSGallery)
         }
         else { 
           write-host "New Version"
