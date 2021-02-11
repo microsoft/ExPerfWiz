@@ -18,9 +18,6 @@ steps:
   clean: true
   persistCredentials: true
 
-- script: echo $(psgallery) # uses macro syntax
-- script: echo $(psgallery) 
-
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -33,7 +30,7 @@ steps:
         Write-Host $Version
         if ((git tag) -contains $version) { 
           write-host "Found Existing Version"
-          write-host $(psgallery)
+          Publish-Module -path '$(Build.SourcesDirectory)' -nugetapikey $(PSGallery)
         }
         else { 
           write-host "New Version"
@@ -41,6 +38,7 @@ steps:
           git tag $version
           git tag
           git push origin $version
+          
       }
 
 - task: DeleteFiles@1
