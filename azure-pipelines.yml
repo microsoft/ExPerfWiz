@@ -30,8 +30,6 @@ steps:
         Write-Host $Version
         if ((git tag) -contains $version) { 
           write-host "Found Existing Version"
-          cd $(Build.SourcesDirectory)
-          Publish-Module -name "ExPerfWiz" -nugetapikey $(PSGallery)
         }
         else { 
           write-host "New Version"
@@ -39,7 +37,6 @@ steps:
           git tag $version
           git tag
           git push origin $version
-          
       }
 
 - task: DeleteFiles@1
@@ -55,7 +52,7 @@ steps:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
     includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/ExPerfWiz.zip'
     replaceExistingArchive: true
 
 - task: GitHubRelease@1
@@ -67,3 +64,17 @@ steps:
     tagSource: 'gitTag'
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/ExPerfWiz'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      Publish-Module -path '$(Build.ArtifactStagingDirectory)\Experfwiz' -nugetapikey $(PSGallery)
