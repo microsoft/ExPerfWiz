@@ -30,6 +30,7 @@ steps:
         Write-Host $Version
         if ((git tag) -contains $version) { 
           write-host "Found Existing Version"
+          Install-Module PowerShellGet -force
           Publish-Module -path $(Build.SourcesDirectory) -nugetapikey $(PSGallery) -whatif -verbose
         }
         else { 
