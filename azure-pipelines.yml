@@ -6,6 +6,8 @@
 trigger:
 - master
 
+variables:
+- group: ExPerfWiz
 
 pool:
   vmImage: windows-latest
@@ -26,7 +28,10 @@ steps:
         ($psd1 | select-string 'moduleversion*') -match '([0-9].[0-9].[0-9])'
         $Version = $Matches.1
         Write-Host $Version
-        if ((git tag) -contains $version) { write-host "Found Existing Version"}
+        if ((git tag) -contains $version) { 
+          write-host "Found Existing Version"
+          write-host $(experfwiz)
+        }
         else { 
           write-host "New Version"
           git config --global user.name "AzureDevOps Agent"
