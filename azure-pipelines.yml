@@ -30,10 +30,6 @@ steps:
         Write-Host $Version
         if ((git tag) -contains $version) { 
           write-host "Found Existing Version"
-          Install-Module PowerShellGet -force
-          Import-Module PowerShellGet -force
-          Get-Command Publish-Module
-          Publish-Module -path $(Build.SourcesDirectory) -nugetapikey $(PSGallery) -whatif -verbose
         }
         else { 
           write-host "New Version"
@@ -56,7 +52,7 @@ steps:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
     includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/ExPerfWiz.zip'
     replaceExistingArchive: true
 
 - task: GitHubRelease@1
@@ -68,3 +64,9 @@ steps:
     tagSource: 'gitTag'
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/ExPerfWiz'
