@@ -1,6 +1,6 @@
-Function New-ExPerfwiz {
+﻿Function New-ExPerfwiz {
     <#
- 
+
     .SYNOPSIS
     Creates a data collector set for investigating performance related issues.
 
@@ -10,10 +10,10 @@ Function New-ExPerfwiz {
     Allows for configuration of the counter set at the time of running the creation command.
 
     Will overwrite any existing Counter Sets that have the same name.
-        
+
     .PARAMETER Circular
     Enabled or Disable circular logging
-    
+
     Default is false (Disabled)
 
     .PARAMETER Duration
@@ -41,13 +41,13 @@ Function New-ExPerfwiz {
 
     .PARAMETER Name
     The name of the data collector set
-    
+
     Default is Exchange_Perfwiz
 
     .PARAMETER Server
     Name of the server where the perfmon collector should be created
 
-    Default is Localhost 
+    Default is Localhost
 
     .PARAMETER StartOnCreate
     Starts the counter set as soon as it is created
@@ -64,12 +64,12 @@ Function New-ExPerfwiz {
     *** Including Threads significantly increase the size of perfmon data ***
 
     Default is False
-    
+
     .OUTPUTS
     Creates a data collector set in Perfmon based on the provided XML file
 
-    Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file    
-	
+    Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file
+
     .EXAMPLE
     Create a standard ExPerfwiz data collector for troubleshooting performane issues on the local machine.
 
@@ -103,17 +103,17 @@ Function New-ExPerfwiz {
     Param(
         [switch]
         $Circular,
-    
+
         [timespan]
         $Duration = [timespan]::Parse('8:00:00'),
-    
+
         [Parameter(Mandatory = $true, HelpMessage = "Please provide a valid folder path for output")]
         [string]
         $FolderPath,
-    
+
         [int]
         $Interval = 5,
-    
+
         [ValidateRange(256, 4096)]
         [int]
         $MaxSize = 256,
@@ -135,19 +135,19 @@ Function New-ExPerfwiz {
 
         [string]
         $StartTime
-        
+
     )
 
     ### Validate Date Time ###
     <# $ErrorActionPreference = "Stop"
     if (![string]::IsNullOrEmpty($StartDate)) { $DateToStart = Get-Date $StartDate }
-    
+
     if (![string]::IsNullOrEmpty($EndDate)) { $DateToEnd = Get-Date $EndDate }
-    
+
     if (![string]::IsNullOrEmpty($StartTime)) { $TimeToStart = Get-Date $StartTime }
     $ErrorActionPreference = "Continue"
     #>
-    
+
     ### Validate Template ###
 
     # Build path to templates
@@ -155,7 +155,7 @@ Function New-ExPerfwiz {
 
     # If no template provided then we need to ask the end user for which one to use
     While ([string]::IsNullOrEmpty($Template)) {
-        Out-LogFile -string ("Searching template path: " + $templatePath) 
+        Out-LogFile -string ("Searching template path: " + $templatePath)
         $templatesToChoose = Get-ChildItem -Path $templatePath  -Filter *.xml
         Write-Output "`nPlease choose a Template:"
 
@@ -165,7 +165,7 @@ Function New-ExPerfwiz {
         # Go thru each of the xml templates we found
         Foreach ($file in $templatesToChoose) {
             $i++
-            Write-Output ($i.tostring() + "> " + $file.name)        
+            Write-Output ($i.tostring() + "> " + $file.name)
         }
 
         # Get the selection from the user
@@ -177,7 +177,7 @@ Function New-ExPerfwiz {
 
     # Test the template path and log it as good or throw an error
     If (Test-Path $Template) {
-        Out-LogFile -string ("Using Template:" + $Template) 
+        Out-LogFile -string ("Using Template:" + $Template)
     }
     Else {
         Throw "Cannot find template xml file provided.  Please provide a valid Perfmon template file."
@@ -215,7 +215,7 @@ Function New-ExPerfwiz {
     # Need to update the file name to reflect if it is circular
     else {
         $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "-1"
-    }    
+    }
 
     # Sample Interval
     $XML.DataCollectorSet.PerformanceCounterDataCollector.SampleInterval = [string]$Interval
@@ -240,7 +240,7 @@ Function New-ExPerfwiz {
     # If -threads is specified we need to add it to the counter set
     If ($Threads) {
 
-        Out-LogFile -string "Adding threads to counter set" 
+        Out-LogFile -string "Adding threads to counter set"
 
         # Create and set the XML element
         $threadCounter = $XML.CreateElement("Counter")
@@ -254,25 +254,25 @@ Function New-ExPerfwiz {
 
     # Write the XML to disk
     $xmlfile = Join-Path $env:TEMP ExPerfwiz.xml
-    Out-LogFile -string ("Writing Configuration to: " + $xmlfile) 
+    Out-LogFile -string ("Writing Configuration to: " + $xmlfile)
     $XML.Save($xmlfile)
-    Out-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server) 
-    
+    Out-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server)
+
     # Import the XML with our configuration
     [string]$logman = logman import -xml $xmlfile -name $Name -s $server
 
     # Control if we are going to throw an error after trying to create the perfmon
     $ShouldTrow = $True
-    
+
     # Check if we generated and error on import
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Out-LogFile -string "Experfwiz imported." 
+        Out-LogFile -string "Experfwiz imported."
         $ShouldTrow = $false
     }
     # We have an error so handle it
     elseif (![string]::IsNullOrEmpty(($logman | select-string "Data Collector Set already exists."))) {
-        
-        # Remove the counter set 
+
+        # Remove the counter set
         Remove-ExPerfwiz -Name $Name -Server $Server
 
         # Try to create it again
@@ -280,17 +280,17 @@ Function New-ExPerfwiz {
 
         # Check again if we have an error
         If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-            Out-LogFile -string "Experfwiz imported." 
+            Out-LogFile -string "Experfwiz imported."
             $ShouldTrow = $false
-        }            
+        }
     }
-    
+
     # If shouldthrow is still true then we have an error and need to show it
     if ($ShouldTrow) {
-        Out-LogFile -string "[ERROR] - Problem importing perfwiz:" 
-        Out-LogFile -string $logman 
+        Out-LogFile -string "[ERROR] - Problem importing perfwiz:"
+        Out-LogFile -string $logman
         Throw $logman
-    }    
+    }
 
     ## Implement Start time
     # The schedule funcation of Perfmon is broken and won't actually start a perfmon
@@ -302,17 +302,17 @@ Function New-ExPerfwiz {
     # No start time value set so we are just using duration (Scenario 2)
     if ([string]::IsNullOrEmpty($StartTime)) {
         # Make sure the schedule is turned off
-        Out-LogFile -string ("No Start time so not creating Scheduled Task") 
+        Out-LogFile -string ("No Start time so not creating Scheduled Task")
     }
     # Need to set the start / end time (Scenario 1)
     else {
         # Create a scheduled task with the listed start time
         New-PerfWizScheduledTask -Name $Name -Server $Server -StartTime (Get-Date $StartTime -UFormat %R)
-    }    
+    }
 
     # Need to start the counter set if asked to do so
     If ($StartOnCreate) {
-        Start-ExPerfwiz -server $Server -Name $Name 
+        Start-ExPerfwiz -server $Server -Name $Name
     }
     else {}
 

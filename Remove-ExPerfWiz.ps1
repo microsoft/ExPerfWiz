@@ -1,6 +1,6 @@
-Function Remove-ExPerfwiz {
+﻿Function Remove-ExPerfwiz {
     <#
- 
+
     .SYNOPSIS
     Removes data collector sets from perfmon
 
@@ -16,10 +16,10 @@ Function Remove-ExPerfwiz {
     Name of the server to remove the collector set from
 
     Default LocalHost
-    
+
     .OUTPUTS
-    Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file   
-	
+    Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file
+
     .EXAMPLE
     Remove a collector set on the local machine
 
@@ -41,19 +41,19 @@ Function Remove-ExPerfwiz {
         [string]
         $Server = $env:ComputerName
     )
-    
-    Out-LogFile -string ("Removing Experfwiz for: " + $server) 
-    
+
+    Out-LogFile -string ("Removing Experfwiz for: " + $server)
+
     # Remove the experfwiz counter set
-    [string]$logman = logman delete -name $Name -s $server    
+    [string]$logman = logman delete -name $Name -s $server
 
     # Check if we have an error and throw and error if needed.
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Out-LogFile "ExPerfwiz removed" 
+        Out-LogFile "ExPerfwiz removed"
     }
     else {
-        Out-LogFile "[ERROR] - Unable to remove Collector" 
-        Out-LogFile $logman 
+        Out-LogFile "[ERROR] - Unable to remove Collector"
+        Out-LogFile $logman
         Throw $logman
     }
 

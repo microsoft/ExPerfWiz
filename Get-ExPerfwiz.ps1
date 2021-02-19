@@ -1,6 +1,6 @@
-Function Get-ExPerfwiz {
+﻿Function Get-ExPerfwiz {
     <#
- 
+
     .SYNOPSIS
     Get information about a data collector set.
 
@@ -18,8 +18,8 @@ Function Get-ExPerfwiz {
     Default LocalHost
 
 	.OUTPUTS
-    Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file 
-	
+    Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file
+
     .EXAMPLE
     Get info on the default collector set
 
@@ -40,10 +40,10 @@ Function Get-ExPerfwiz {
         $Server = $env:ComputerName
 
     )
-    
+
     Out-LogFile -string ("Getting ExPerfwiz: " + $server)
-    
-    
+
+
     # If no name was provided then we need to return all counters logman finds
     if ([string]::IsNullOrEmpty($Name)) {
 
@@ -51,15 +51,15 @@ Function Get-ExPerfwiz {
         $logmanAll = logman query -s $server
 
         If (!([string]::isnullorempty(($logmanAll | select-string "Error:")))) {
-            throw $logmanAll[-1]            
+            throw $logmanAll[-1]
         }
 
         # Process the string return into a set of counter names
         $i = -3
         [array]$perfLogNames = $null
-    
+
         While (!($logmanAll[$i] | select-string "---")) {
-            
+
             # pull the first 40 characters then trim and trailing spaces
             [array]$perfLogNames += $logmanAll[$i].substring(0, 40).trimend()
             $i--
@@ -78,18 +78,18 @@ Function Get-ExPerfwiz {
 
         # Quick error check
         If (!([string]::isnullorempty(($logman | select-string "Error:")))) {
-            throw $logman[-1]            
+            throw $logman[-1]
         }
 
         # Convert the output of logman into an object
         $logmanObject = New-Object -TypeName PSObject
-    
+
         foreach ($line in $logman) {
 
             $linesplit = $line.split(":").trim()
 
             switch (($linesplit)[0]) {
-                'Name' { 
+                'Name' {
                     # Skip the path to the perfmon inside the counter set
                     if ($linesplit[1] -like "*\*") {}
                     # Set the name and push it into a variable to use later
@@ -103,7 +103,7 @@ Function Get-ExPerfwiz {
                     if ($linesplit[1].contains("%")) {
                         $logmanObject | Add-Member -MemberType NoteProperty -Name "RootPath" -Value $linesplit[1]
                         $logmanObject | Add-Member -MemberType NoteProperty -Name "OutputPath" -Value $linesplit[1]
-                    } 
+                    }
                     else {
                         $logmanObject | Add-Member -MemberType NoteProperty -Name "RootPath" -Value (Resolve-path ($linesplit[1] + ":" + $linesplit[2]))
                         $logmanObject | Add-Member -MemberType NoteProperty -Name "OutputPath" -Value (Join-path (($linesplit[1] + ":" + $linesplit[2])) ($env:ComputerName + "_" + $logManName))
@@ -133,7 +133,7 @@ Function Get-ExPerfwiz {
 
         # Add each object to the return array
         [array]$logmanCollection += $logmanObject
-    }    
-    
+    }
+
     return $logmanCollection
 }

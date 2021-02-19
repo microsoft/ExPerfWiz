@@ -1,6 +1,6 @@
-Function Start-ExPerfwiz {
-        <#
- 
+﻿Function Start-ExPerfwiz {
+    <#
+
     .SYNOPSIS
     Starts a data collector set
 
@@ -18,8 +18,8 @@ Function Start-ExPerfwiz {
     Default LocalHost
 
 	.OUTPUTS
-     Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file   
-     
+     Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file
+
 	.EXAMPLE
     Start the default data collector set on this server.
 
@@ -35,23 +35,23 @@ Function Start-ExPerfwiz {
     param (
         [string]
         $Name = "Exchange_Perfwiz",
-        
+
         [string]
         $Server = $env:ComputerName
-            )
-    
-    Out-LogFile -string ("Starting ExPerfwiz: " + $server) 
-    
+    )
+
+    Out-LogFile -string ("Starting ExPerfwiz: " + $server)
+
     # Remove the experfwiz counter set
     [string]$logman = logman start -name $Name -s $server
 
     # Check if we have an error and throw and error if needed.
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Out-LogFile "ExPerfwiz Started" 
+        Out-LogFile "ExPerfwiz Started"
     }
     else {
-        Out-LogFile "[ERROR] - Unable to Start Collector" 
-        Out-LogFile $logman 
+        Out-LogFile "[ERROR] - Unable to Start Collector"
+        Out-LogFile $logman
         Throw $logman
     }
 }

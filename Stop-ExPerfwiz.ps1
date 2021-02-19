@@ -1,6 +1,6 @@
-Function Stop-ExPerfwiz {
+﻿Function Stop-ExPerfwiz {
     <#
- 
+
     .SYNOPSIS
     Stop a data collector set.
 
@@ -18,8 +18,8 @@ Function Stop-ExPerfwiz {
     Default LocalHost
 
 	.OUTPUTS
-    Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file   
-    
+    Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file
+
     .EXAMPLE
     Stop the default data collector set on the local server
 
@@ -39,19 +39,19 @@ Function Stop-ExPerfwiz {
         [string]
         $Server = $env:ComputerName
     )
-    
-    Out-LogFile -string ("Stopping ExPerfwiz: " + $server) 
-    
+
+    Out-LogFile -string ("Stopping ExPerfwiz: " + $server)
+
     # Remove the experfwiz counter set
     [string]$logman = logman stop -name $Name -s $server
 
     # Check if we have an error and throw and error if needed.
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Out-LogFile "ExPerfwiz Stopped" 
+        Out-LogFile "ExPerfwiz Stopped"
     }
     else {
-        Out-LogFile "[ERROR] - Unable to Stop Collector" 
-        Out-LogFile $logman 
+        Out-LogFile "[ERROR] - Unable to Stop Collector"
+        Out-LogFile $logman
         Throw $logman
     }
 }

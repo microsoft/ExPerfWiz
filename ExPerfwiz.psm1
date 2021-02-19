@@ -1,4 +1,4 @@
-#############################################################################################
+﻿#############################################################################################
 # DISCLAIMER:																				#
 #																							#
 # THE SAMPLE SCRIPTS ARE NOT SUPPORTED UNDER ANY MICROSOFT STANDARD SUPPORT					#
@@ -20,18 +20,18 @@
 # Writes output to a log file with a time date stamp
 Function Out-LogFile {
     [cmdletbinding()]
-    Param 
-    ( 
+    Param
+    (
         [Parameter(Mandatory = $true)]
         [string]$String
     )
-	
+
     # Get our log file path
     $LogFile = Join-path $env:LOCALAPPDATA ExPefwiz.log
-    	
+
     # Get the current date
     [string]$date = Get-Date -Format G
-    
+
     # Build output string
     [string]$logstring = ( "[" + $date + "] - " + $string)
 
@@ -42,6 +42,7 @@ Function Out-LogFile {
 
 Function Convert-OnOffBool {
     [cmdletbinding()]
+    [OutputType([bool])]
     Param(
         [Parameter(Mandatory = $true)]
         [string]$tocompare
@@ -57,7 +58,7 @@ Function Convert-OnOffBool {
 Function New-PerfWizScheduledTask {
     [CmdletBinding()]
     param (
-        
+
         [String]
         $Name,
 
@@ -76,7 +77,7 @@ Function New-PerfWizScheduledTask {
 
     # Check if we have an error
     if (![string]::IsNullOrEmpty(($TaskResult | select-string "Error:"))) {
-        Out-LogFile -string "[ERROR] - Creating Scheduled Task" 
+        Out-LogFile -string "[ERROR] - Creating Scheduled Task"
         Out-LogFile -string [string]$TaskResult
         Throw "UNABLE TO CREATE SCHEDULED TASK: $TaskResult"
 
@@ -107,10 +108,10 @@ Function Remove-PerfWizScheduledTask {
     }
     # all other cases throw error
     else {
-        Out-LogFile -string "[ERROR] - Removing Scheduled Task" 
+        Out-LogFile -string "[ERROR] - Removing Scheduled Task"
         Out-LogFile -string [string]$TaskResult
         Throw "UNABLE TO REMOVE SCHEDULED TASK: $TaskResult"
-    
+
     }
 }
 
@@ -128,15 +129,15 @@ Function Get-PerfWizScheduledTask {
 
     # If we found a task with that name return True
     if (![string]::IsNullOrEmpty(($taskFound | select-string "Taskname"))) {
-        return true 
+        return true
     }
     # if we didn't find a task with that name return false
-    elseif (![string]::IsNullOrEmpty(($taskFound | select-string "The system cannot find the file specified."))) { 
-        return false 
+    elseif (![string]::IsNullOrEmpty(($taskFound | select-string "The system cannot find the file specified."))) {
+        return false
     }
     # If we got an error throw
     else {
-        Out-LogFile -string "[ERROR] - Getting Scheduled Task" 
+        Out-LogFile -string "[ERROR] - Getting Scheduled Task"
         Out-LogFile -string [string]$TaskResult
         Throw "UNABLE TO GET SCHEDULED TASK: $TaskResult"
     }
