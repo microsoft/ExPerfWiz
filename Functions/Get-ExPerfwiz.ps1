@@ -84,6 +84,7 @@
         # Convert the output of logman into an object
         $logmanObject = New-Object -TypeName PSObject
 
+        # Go thru each line and determine what the value should be
         foreach ($line in $logman) {
 
             $linesplit = $line.split(":").trim()
@@ -94,38 +95,60 @@
                     if ($linesplit[1] -like "*\*") {}
                     # Set the name and push it into a variable to use later
                     else {
-                        $logmanObject | Add-Member -MemberType NoteProperty -Name $linesplit[0] -Value $linesplit[1] -Force
-                        $logManName = $linesplit[1]
+                        $name = $linesplit[1]
                     }
                 }
-                'Status' { $logmanObject | Add-Member -MemberType NoteProperty -Name $linesplit[0] -Value $linesplit[1] }
+                'Status' { $status = $linesplit[1] }
                 'Root Path' {
                     if ($linesplit[1].contains("%")) {
-                        $logmanObject | Add-Member -MemberType NoteProperty -Name "RootPath" -Value $linesplit[1]
-                        $logmanObject | Add-Member -MemberType NoteProperty -Name "OutputPath" -Value $linesplit[1]
+                        $rootPath = $linesplit[1]
+                        $outputPath = $linesplit[1]
                     }
                     else {
-                        $logmanObject | Add-Member -MemberType NoteProperty -Name "RootPath" -Value (Resolve-path ($linesplit[1] + ":" + $linesplit[2]))
-                        $logmanObject | Add-Member -MemberType NoteProperty -Name "OutputPath" -Value (Join-path (($linesplit[1] + ":" + $linesplit[2])) ($env:ComputerName + "_" + $logManName))
+                        $rootPath = (Resolve-path ($linesplit[1] + ":" + $linesplit[2]))
+                        $outputPath = (Join-path (($linesplit[1] + ":" + $linesplit[2])) ($env:ComputerName + "_" + $name))
                     }
                 }
-                'Segment' { $logmanObject | Add-Member -MemberType NoteProperty -Name $linesplit[0] -Value $linesplit[1] }
-                'Schedules' { $logmanObject | Add-Member -MemberType NoteProperty -Name $linesplit[0] -Value $linesplit[1] }
-                'Duration' { $logmanObject | Add-Member -MemberType NoteProperty -Name "Duration" -Value (New-TimeSpan -Seconds ([int]($linesplit[1].split(" "))[0])) }
-                'Segment Max Size' { $logmanObject | Add-Member -MemberType NoteProperty -Name 'MaxSize' -Value (($linesplit[1].replace(" ", "")) / 1MB) }
-                'Run As' { $logmanObject | Add-Member -MemberType NoteProperty -Name "RunAs" -Value $linesplit[1] }
-                'Start Date' { $logmanObject | Add-Member -MemberType NoteProperty -Name "StartDate" -Value $linesplit[1] }
-                'Start Time' { $logmanObject | Add-Member -MemberType NoteProperty -Name "StartTime" -Value ($line.split(" ")[-2] + " " + $line.split(" ")[-1]) }
-                'End Date' { $logmanObject | Add-Member -MemberType NoteProperty -Name "EndDate" -Value $linesplit[1] }
-                'Days' { $logmanObject | Add-Member -MemberType NoteProperty -Name "Days" -Value $linesplit[1] }
-                'Type' { $logmanObject | Add-Member -MemberType NoteProperty -Name "Type" -Value $linesplit[1] }
-                'Append' { $logmanObject | Add-Member -MemberType NoteProperty -Name "Append" -Value (Convert-OnOffBool($linesplit[1])) }
-                'Circular' { $logmanObject | Add-Member -MemberType NoteProperty -Name "Circular" -Value (Convert-OnOffBool($linesplit[1])) }
-                'Overwrite' { $logmanObject | Add-Member -MemberType NoteProperty -Name "Overwrite" -Value (Convert-OnOffBool($linesplit[1])) }
-                'Sample Interval' { $logmanObject | Add-Member -MemberType NoteProperty -Name "SampleInterval" -Value (($linesplit[1].split(" "))[0]) }
+                'Segment' { $segment = $linesplit[1] }
+                'Schedules' { $schedules = $linesplit[1] }
+                'Duration' { $duration = (New-TimeSpan -Seconds ([int]($linesplit[1].split(" "))[0])) }
+                'Segment Max Size' { $maxSize = (($linesplit[1].replace(" ", "")) / 1MB) }
+                'Run As' { $runAs = $linesplit[1] }
+                'Start Date' { $startDate = $linesplit[1] }
+                'Start Time' { $startTime = ($line.split(" ")[-2] + " " + $line.split(" ")[-1]) }
+                'End Date' { $endDate = $linesplit[1] }
+                'Days' { $days = $linesplit[1] }
+                'Type' { $type = $linesplit[1] }
+                'Append' { $append = (Convert-OnOffBool($linesplit[1])) }
+                'Circular' { $circular = (Convert-OnOffBool($linesplit[1])) }
+                'Overwrite' { $overwrite = (Convert-OnOffBool($linesplit[1])) }
+                'Sample Interval' { $sampleInterval = (($linesplit[1].split(" "))[0]) }
                 Default {}
             }
 
+            
+
+        }
+
+        $logmanObject = New-Object PSObject -Property @{
+            Name           = $name
+            Status         = $status
+            RootPath       = $rootPath
+            OutputPath     = $outputPath
+            Segment        = $segment
+            Schedules      = $schedules
+            Duration       = $duration
+            MaxSize        = $maxSize
+            RunAs          = $runAs
+            StartDate      = $startDate
+            StartTime      = $startTime
+            EndDate        = $endDate
+            Days           = $days
+            Type           = $type
+            Append         = $append
+            Circular       = $circular
+            OverWrite      = $overwrite
+            SampleInterval = $sampleInterval 
         }
 
         # Add customer PS Object type for use with formatting files
