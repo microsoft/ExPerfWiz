@@ -152,24 +152,10 @@
 
     # If no template provided then we need to ask the end user for which one to use
     While ([string]::IsNullOrEmpty($Template)) {
-        Out-LogFile -string ("Searching template path: " + $templatePath)
-        $templatesToChoose = Get-ChildItem -Path $templatePath  -Filter *.xml
-        Write-Output "`nPlease choose a Template:"
-
-        # Setup counters
-        $i = 0
-
-        # Go thru each of the xml templates we found
-        Foreach ($file in $templatesToChoose) {
-            $i++
-            Write-Output ($i.tostring() + "> " + $file.name)
-        }
-
-        # Get the selection from the user
-        $selection = Read-Host ("`nChoose Template (1-" + $i + ")")
+        out-logfile "Using default template"
 
         # Put the selected xml into template
-        $Template = $templatesToChoose[($selection - 1)].FullName
+        $Template = join-path $templatePath "Exch_13_16_19_Full.xml"
     }
 
     # Test the template path and log it as good or throw an error
