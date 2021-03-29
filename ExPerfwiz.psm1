@@ -18,7 +18,7 @@
 # ============== Utility Functions ==============
 
 # Writes output to a log file with a time date stamp
-Function Out-LogFile {
+Function Write-Logfile {
     [cmdletbinding()]
     Param
     (
@@ -71,14 +71,14 @@ Function New-PerfWizScheduledTask {
 
     # Going to use schtasks.exe for this instead of New-ScheduledTask
     # New-ScheduledTask is not support on 2012R2 it appears; only shows in Win10 or 2016+
-    Out-LogFile -String "Creating Scehduled Task $Name"
+    Write-Logfile -String "Creating Scehduled Task $Name"
     # Create the task ... 2>&1 used to redirect schtasks stderr output to stdopt so it can be processed in PS
     $TaskResult = SCHTASKS /Create /S $Server /RU "SYSTEM" /SC DAILY /TN $Name /TR "logman.exe start $name" /ST $starttime /F 2>&1
 
     # Check if we have an error
     if (![string]::IsNullOrEmpty(($TaskResult | select-string "Error:"))) {
-        Out-LogFile -string "[ERROR] - Creating Scheduled Task"
-        Out-LogFile -string [string]$TaskResult
+        Write-Logfile -string "[ERROR] - Creating Scheduled Task"
+        Write-Logfile -string [string]$TaskResult
         Throw "UNABLE TO CREATE SCHEDULED TASK: $TaskResult"
 
     }
@@ -100,16 +100,16 @@ Function Remove-PerfWizScheduledTask {
 
     # if success record that
     if (![string]::IsNullOrEmpty(($taskRemove | select-string "SUCCESS:"))) {
-        Out-LogFile -string "Removed task $name from server $server"
+        Write-Logfile -string "Removed task $name from server $server"
     }
     # Check if we didn't find the task and record that
     elseif (![string]::IsNullOrEmpty(($taskRemove | select-string "The system cannot find the file specified"))) {
-        Out-LogFile -string "Task $name not found on server $server"
+        Write-Logfile -string "Task $name not found on server $server"
     }
     # all other cases throw error
     else {
-        Out-LogFile -string "[ERROR] - Removing Scheduled Task"
-        Out-LogFile -string [string]$TaskResult
+        Write-Logfile -string "[ERROR] - Removing Scheduled Task"
+        Write-Logfile -string [string]$TaskResult
         Throw "UNABLE TO REMOVE SCHEDULED TASK: $TaskResult"
 
     }
@@ -137,8 +137,8 @@ Function Get-PerfWizScheduledTask {
     }
     # If we got an error throw
     else {
-        Out-LogFile -string "[ERROR] - Getting Scheduled Task"
-        Out-LogFile -string [string]$TaskResult
+        Write-Logfile -string "[ERROR] - Getting Scheduled Task"
+        Write-Logfile -string [string]$TaskResult
         Throw "UNABLE TO GET SCHEDULED TASK: $TaskResult"
     }
 }

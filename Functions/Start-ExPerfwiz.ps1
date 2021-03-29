@@ -40,7 +40,7 @@
         $Server = $env:ComputerName
     )
 
-    Out-LogFile -string ("Starting ExPerfwiz: " + $Server)
+    Write-Logfile -string ("Starting ExPerfwiz: " + $Server)
 
     # Check if we have an error and throw and error if needed.
     $i = 0
@@ -53,7 +53,7 @@
         # so incrementing the size and trying again.
         if ($logman | select-string "Unable to create the specified log file"){
             Write-Warning "Starting Experfwiz Failed ... Incrementing size and trying again. [Attempt $i/3]"
-            Out-LogFile "Retrying Start-Experfwiz"
+            Write-Logfile "Retrying Start-Experfwiz"
             Step-ExPerfwizSize -Name $Name -Server $Server
             $i++
             $repeat = $true
@@ -64,11 +64,11 @@
 
     # If we have an error then we need to throw else continue
     If ($logman | select-string "Error:") {
-        Out-LogFile "[ERROR] - Unable to Start Collector"
-        Out-LogFile $logman
+        Write-Logfile "[ERROR] - Unable to Start Collector"
+        Write-Logfile $logman
         Throw $logman        
     }
     else {
-        Out-LogFile "ExPerfwiz Started"
+        Write-Logfile "ExPerfwiz Started"
     }
 }

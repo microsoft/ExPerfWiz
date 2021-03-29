@@ -24,8 +24,8 @@ Function Step-ExPerfwizSize {
     # If we find an error throw
     # Otherwise nothing
     if ($logman | select-string "Error:") {      
-        Out-LogFile -string "[ERROR] - Problem stepping perfwize size:"
-        Out-LogFile -string $logman
+        Write-Logfile -string "[ERROR] - Problem stepping perfwize size:"
+        Write-Logfile -string $logman
         Throw $logman
     }
     else {}

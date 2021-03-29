@@ -41,7 +41,7 @@
 
     )
 
-    Out-LogFile -string ("Getting ExPerfwiz: " + $server)
+    Write-Logfile -string ("Getting ExPerfwiz: " + $server)
 
 
     # If no name was provided then we need to return all counters logman finds

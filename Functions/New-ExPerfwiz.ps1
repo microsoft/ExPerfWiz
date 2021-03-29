@@ -152,7 +152,7 @@
 
     # If no template provided then we need to ask the end user for which one to use
     While ([string]::IsNullOrEmpty($Template)) {
-        out-logfile "Using default template"
+        Write-Logfile "Using default template"
 
         # Put the selected xml into template
         $Template = join-path $templatePath "Exch_13_16_19_Full.xml"
@@ -160,7 +160,7 @@
 
     # Test the template path and log it as good or throw an error
     If (Test-Path $Template) {
-        Out-LogFile -string ("Using Template:" + $Template)
+        Write-Logfile -string ("Using Template:" + $Template)
     }
     Else {
         Throw "Cannot find template xml file provided.  Please provide a valid Perfmon template file."
@@ -223,7 +223,7 @@
     # If -threads is specified we need to add it to the counter set
     If ($Threads) {
 
-        Out-LogFile -string "Adding threads to counter set"
+        Write-Logfile -string "Adding threads to counter set"
 
         # Create and set the XML element
         $threadCounter = $XML.CreateElement("Counter")
@@ -237,9 +237,9 @@
 
     # Write the XML to disk
     $xmlfile = Join-Path $env:TEMP ExPerfwiz.xml
-    Out-LogFile -string ("Writing Configuration to: " + $xmlfile)
+    Write-Logfile -string ("Writing Configuration to: " + $xmlfile)
     $XML.Save($xmlfile)
-    Out-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server)
+    Write-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server)
 
     # Import the XML with our configuration
     [string]$logman = logman import -xml $xmlfile -name $Name -s $server
@@ -249,7 +249,7 @@
 
     # Check if we generated and error on import
     If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Out-LogFile -string "Experfwiz imported."
+        Write-Logfile -string "Experfwiz imported."
         $ShouldTrow = $false
     }
     # We have an error so handle it
@@ -263,15 +263,15 @@
 
         # Check again if we have an error
         If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-            Out-LogFile -string "Experfwiz imported."
+            Write-Logfile -string "Experfwiz imported."
             $ShouldTrow = $false
         }
     }
 
     # If shouldthrow is still true then we have an error and need to show it
     if ($ShouldTrow) {
-        Out-LogFile -string "[ERROR] - Problem importing perfwiz:"
-        Out-LogFile -string $logman
+        Write-Logfile -string "[ERROR] - Problem importing perfwiz:"
+        Write-Logfile -string $logman
         Throw $logman
     }
 
@@ -285,7 +285,7 @@
     # No start time value set so we are just using duration (Scenario 2)
     if ([string]::IsNullOrEmpty($StartTime)) {
         # Make sure the schedule is turned off
-        Out-LogFile -string ("No Start time so not creating Scheduled Task")
+        Write-Logfile -string ("No Start time so not creating Scheduled Task")
     }
     # Need to set the start / end time (Scenario 1)
     else {
