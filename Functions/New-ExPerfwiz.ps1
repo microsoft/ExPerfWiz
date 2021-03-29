@@ -35,9 +35,7 @@
 
     .PARAMETER MaxSize
     Maximum size of the perfmon log in MegaBytes
-    Valid ranges are 100 - 1024
-
-    Default is 250mb (250)
+    Default is 1024MB
 
     .PARAMETER Name
     The name of the data collector set
@@ -114,9 +112,8 @@
         [int]
         $Interval = 5,
 
-        [ValidateRange(256, 4096)]
         [int]
-        $MaxSize = 256,
+        $MaxSize = 1024,
 
         [string]
         $Name = "Exchange_Perfwiz",
