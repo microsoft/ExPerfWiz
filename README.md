@@ -43,7 +43,7 @@ Name|The name of the data collector set|Exchange_Perfwiz
 Server|Name of the server where the perfmon collector should be created|Local Machine
 StartOnCreate|Starts the counter set as soon as it is created|False
 StartTime|Daily time to start perfmon counter|NA
-Template| XML perfmon template file that should be loaded to create the data collector set.|Prompt
+Template| XML perfmon template file that should be loaded to create the data collector set.|Exch_13_16_19_Full.xml
 Threads|Includes threads in the counter set.|False
 
 
