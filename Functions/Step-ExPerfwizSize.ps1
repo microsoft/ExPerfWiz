@@ -1,4 +1,36 @@
 Function Step-ExPerfwizSize {
+    <#
+
+    .SYNOPSIS
+    Increases the max size of the experfwiz file by 1
+
+    .DESCRIPTION
+    To work around an issue with where start-experfwiz might fail this will increament the max size by 1mb
+
+    .PARAMETER Name
+    Name of the Data Collector set
+
+    Default Exchange_Perfwiz
+
+    .PARAMETER Server
+    Name of the server
+
+    Default LocalHost
+
+	.OUTPUTS
+    none
+
+    .EXAMPLE
+    Increase the max size of the default local experfwiz by 1
+
+    Step-ExperfWizSize
+
+    .EXAMPLE
+    Increase the max size of a named remote experfwiz by 1
+
+    Step-ExPerfwizSize -Name "My Collector Set" -Server RemoteServer-01
+
+    #>
 
     [cmdletbinding()]
     param (
@@ -6,11 +38,7 @@ Function Step-ExPerfwizSize {
         $Name = "Exchange_Perfwiz",
 
         [string]
-        $Server = $env:ComputerName,
-
-        [int]
-        $Size
-
+        $Server = $env:ComputerName
     )
 
     # Step up the size of the perfwiz by 1
