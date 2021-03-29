@@ -132,8 +132,6 @@
         $logmanObject.pstypenames.insert(0, 'Experfwiz.Counter')
 
         # Add each object to the return array
-        [array]$logmanCollection += $logmanObject
+        $logmanObject
     }
-
-    return $logmanCollection
 }
