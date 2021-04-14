@@ -135,16 +135,6 @@
 
     )
 
-    ### Validate Date Time ###
-    <# $ErrorActionPreference = "Stop"
-    if (![string]::IsNullOrEmpty($StartDate)) { $DateToStart = Get-Date $StartDate }
-
-    if (![string]::IsNullOrEmpty($EndDate)) { $DateToEnd = Get-Date $EndDate }
-
-    if (![string]::IsNullOrEmpty($StartTime)) { $TimeToStart = Get-Date $StartTime }
-    $ErrorActionPreference = "Continue"
-    #>
-
     ### Validate Template ###
 
     # Build path to templates
@@ -206,17 +196,17 @@
     # Make sure the XML schedule is set to reflect if we are setting up a scheduled task
     if ([string]::IsNullOrEmpty($StartTime)) {
         $XML.DataCollectorSet.SchedulesEnabled = "0"
-        # Sine not schedule we are going to set the date / time to 1900
-        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Day 1 -Month 1 -Year 1900).tostring()
-        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 1900 -Format d).tostring()
-        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date -Hour 12 -Minute 0 -UFormat %R).tostring()
+        # Since not schedule we are going to set the date / time to 1900
+        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy)
+        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy)
+        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date -Hour 12 -Minute 0 -Format HH:mm )
     }
     else {
         $XML.DataCollectorSet.SchedulesEnabled = "1"
         # Set the schedule date and time to reflect the values in the scheduled task
-        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -format d).tostring()
-        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 2100 -Format d).tostring()
-        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date $StartTime -UFormat %R).tostring()
+        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Format MM\/dd\/yyyy)
+        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 2100 -Format MM\/dd\/yyyy)
+        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date $StartTime -Format HH:mm)
 
     }
 
@@ -290,7 +280,7 @@
     # Need to set the start / end time (Scenario 1)
     else {
         # Create a scheduled task with the listed start time
-        New-PerfWizScheduledTask -Name $Name -Server $Server -StartTime (Get-Date $StartTime -UFormat %R)
+        New-PerfWizScheduledTask -Name $Name -Server $Server -StartTime (Get-Date $StartTime -Format HH:mm)
     }
 
     # Need to start the counter set if asked to do so
