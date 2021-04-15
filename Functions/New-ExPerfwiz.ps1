@@ -197,16 +197,16 @@
     if ([string]::IsNullOrEmpty($StartTime)) {
         $XML.DataCollectorSet.SchedulesEnabled = "0"
         # Since not schedule we are going to set the date / time to 1900
-        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy)
-        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy)
-        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date -Hour 12 -Minute 0 -Format HH:mm )
+        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy).tostring()
+        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy).tostring()
+        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date -Hour 12 -Minute 0 -Format HH:mm ).tostring()
     }
     else {
         $XML.DataCollectorSet.SchedulesEnabled = "1"
         # Set the schedule date and time to reflect the values in the scheduled task
-        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Format MM\/dd\/yyyy)
-        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 2100 -Format MM\/dd\/yyyy)
-        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date $StartTime -Format HH:mm)
+        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Format MM\/dd\/yyyy).tostring()
+        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 2100 -Format MM\/dd\/yyyy).tostring()
+        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date $StartTime -Format HH:mm).tostring()
 
     }
 
