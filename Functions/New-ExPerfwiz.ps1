@@ -153,7 +153,7 @@
         Write-Logfile -string ("Using Template:" + $Template)
     }
     Else {
-        Throw "Cannot find template xml file provided.  Please provide a valid Perfmon template file."
+        Throw "Cannot find template xml file provided.  Please provide a valid Perfmon template file. $Template"
     }
 
     ### Manipulate Template ###
@@ -183,11 +183,13 @@
     # Circular logging state
     if ($Circular) {
         $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "1"
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogAppend = "1"
         $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = (($Name -replace '\s+', '') + "_Circular")
     }
     # Need to update the file name to reflect if it is circular
     else {
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "-1"
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "0"
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogAppend = "0"
     }
 
     # Sample Interval
