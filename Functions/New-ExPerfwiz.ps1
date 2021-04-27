@@ -97,7 +97,7 @@
     #>
 
     ### Creates a new experfwiz collector
-    [cmdletbinding()]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
     Param(
         [switch]
         $Circular,
@@ -118,6 +118,7 @@
         [string]
         $Name = "Exchange_Perfwiz",
 
+        [Parameter(ValueFromPipeline)]
         [string]
         $Server = $env:ComputerName,
 
@@ -135,164 +136,170 @@
 
     )
 
-    # Check for new version of Experfwiz
-    Get-ExperfwizUpdate
-
-    # Build path to templates
-    $templatePath = join-path (split-path (Get-Module experfwiz).path -Parent) Templates
-
-    # If no template provided then we need to ask the end user for which one to use
-    While ([string]::IsNullOrEmpty($Template)) {
-        Write-Logfile "Using default template"
-
-        # Put the selected xml into template
-        $Template = join-path $templatePath "Exch_13_16_19_Full.xml"
+    Begin {
+        # Check for new version of Experfwiz
+        Get-ExperfwizUpdate
     }
 
-    # Test the template path and log it as good or throw an error
-    If (Test-Path $Template) {
-        Write-Logfile -string ("Using Template:" + $Template)
-    }
-    Else {
-        Throw "Cannot find template xml file provided.  Please provide a valid Perfmon template file. $Template"
-    }
+    Process {
 
-    ### Manipulate Template ###
+        # Build path to templates
+        $templatePath = join-path (split-path (Get-Module experfwiz | Sort-Object -Property Version -Descending)[0].path -Parent) Templates
 
-    # Load the provided template
-    [xml]$XML = Get-Content $Template
+        # If no template provided then we use the default one
+        While ([string]::IsNullOrEmpty($Template)) {
+            Write-Logfile "Using default template"
 
-    # Set Output Location
-    $XML.DataCollectorSet.OutputLocation = $FolderPath
-    $XML.DataCollectorSet.RootPath = $FolderPath
-    $XML.DataCollectorSet.Subdirectory = ($Name -replace '\s+', '')
-    $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = ($Name -replace '\s+', '')
-    $XML.DataCollectorSet.PerformanceCounterDataCollector.Name = ($Name -replace '\s+', '')
+            # Put the selected xml into template
+            $Template = join-path $templatePath "Exch_13_16_19_Full.xml"
+        }
 
-    # Set overall Duration
-    $XML.DataCollectorSet.Duration = [string]$Duration.TotalSeconds
+        # Test the template path and log it as good or throw an error
+        If (Test-Path $Template) {
+            Write-Logfile -string ("Using Template:" + $Template)
+        }
+        Else {
+            Throw "Cannot find template xml file provided.  Please provide a valid Perfmon template file. $Template"
+        }
 
-    # Set segment to restart when limit reached
-    $XML.DataCollectorSet.Segment = "-1"
+        ### Manipulate Template ###
 
-    # Make sure segment duration is NOT set we want overall duration to win here
-    $XML.DataCollectorSet.SegmentMaxDuration = "0"
+        # Load the provided template
+        [xml]$XML = Get-Content $Template
 
-    # Set Max File size
-    $XML.DataCollectorSet.SegmentMaxSize = [string]$MaxSize
+        # Set Output Location
+        $XML.DataCollectorSet.OutputLocation = $FolderPath
+        $XML.DataCollectorSet.RootPath = $FolderPath
+        $XML.DataCollectorSet.Subdirectory = ($Name -replace '\s+', '')
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = ($Name -replace '\s+', '')
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.Name = ($Name -replace '\s+', '')
 
-    # Circular logging state
-    if ($Circular) {
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "1"
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogAppend = "1"
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = (($Name -replace '\s+', '') + "_Circular")
-    }
-    # Need to update the file name to reflect if it is circular
-    else {
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "0"
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.LogAppend = "0"
-    }
+        # Set overall Duration
+        $XML.DataCollectorSet.Duration = [string]$Duration.TotalSeconds
 
-    # Sample Interval
-    $XML.DataCollectorSet.PerformanceCounterDataCollector.SampleInterval = [string]$Interval
+        # Set segment to restart when limit reached
+        $XML.DataCollectorSet.Segment = "-1"
 
-    # Make sure the XML schedule is set to reflect if we are setting up a scheduled task
-    if ([string]::IsNullOrEmpty($StartTime)) {
-        $XML.DataCollectorSet.SchedulesEnabled = "0"
-        # Since not schedule we are going to set the date / time to 1900
-        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy).tostring()
-        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy).tostring()
-        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date -Hour 12 -Minute 0 -Format HH:mm ).tostring()
-    }
-    else {
-        $XML.DataCollectorSet.SchedulesEnabled = "1"
-        # Set the schedule date and time to reflect the values in the scheduled task
-        $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Format MM\/dd\/yyyy).tostring()
-        $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 2100 -Format MM\/dd\/yyyy).tostring()
-        $XML.DataCollectorSet.Schedule.StartTime = (Get-Date $StartTime -Format HH:mm).tostring()
+        # Make sure segment duration is NOT set we want overall duration to win here
+        $XML.DataCollectorSet.SegmentMaxDuration = "0"
 
-    }
+        # Set Max File size
+        $XML.DataCollectorSet.SegmentMaxSize = [string]$MaxSize
 
-    # If -threads is specified we need to add it to the counter set
-    If ($Threads) {
+        # Circular logging state
+        if ($Circular) {
+            $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "1"
+            $XML.DataCollectorSet.PerformanceCounterDataCollector.LogAppend = "1"
+            $XML.DataCollectorSet.PerformanceCounterDataCollector.Filename = (($Name -replace '\s+', '') + "_Circular")
+        }
+        # Need to update the file name to reflect if it is circular
+        else {
+            $XML.DataCollectorSet.PerformanceCounterDataCollector.LogCircular = "0"
+            $XML.DataCollectorSet.PerformanceCounterDataCollector.LogAppend = "0"
+        }
 
-        Write-Logfile -string "Adding threads to counter set"
+        # Sample Interval
+        $XML.DataCollectorSet.PerformanceCounterDataCollector.SampleInterval = [string]$Interval
 
-        # Create and set the XML element
-        $threadCounter = $XML.CreateElement("Counter")
-        $threadCounter.InnerXml = "\Thread(*)\*"
+        # Make sure the XML schedule is set to reflect if we are setting up a scheduled task
+        if ([string]::IsNullOrEmpty($StartTime)) {
+            $XML.DataCollectorSet.SchedulesEnabled = "0"
+            # Since not schedule we are going to set the date / time to 1900
+            $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy).tostring()
+            $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy).tostring()
+            $XML.DataCollectorSet.Schedule.StartTime = (Get-Date -Hour 12 -Minute 0 -Format HH:mm ).tostring()
+        }
+        else {
+            $XML.DataCollectorSet.SchedulesEnabled = "1"
+            # Set the schedule date and time to reflect the values in the scheduled task
+            $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Format MM\/dd\/yyyy).tostring()
+            $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 2100 -Format MM\/dd\/yyyy).tostring()
+            $XML.DataCollectorSet.Schedule.StartTime = (Get-Date $StartTime -Format HH:mm).tostring()
 
-        # Add the XML element
-        $XML.DataCollectorSet.PerformanceCounterDataCollector.AppendChild($threadCounter)
+        }
 
-    }
-    else {}
+        # If -threads is specified we need to add it to the counter set
+        If ($Threads) {
 
-    # Write the XML to disk
-    $xmlfile = Join-Path $env:TEMP ExPerfwiz.xml
-    Write-Logfile -string ("Writing Configuration to: " + $xmlfile)
-    $XML.Save($xmlfile)
-    Write-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server)
+            Write-Logfile -string "Adding threads to counter set"
 
-    # Import the XML with our configuration
-    [string]$logman = logman import -xml $xmlfile -name $Name -s $server
+            # Create and set the XML element
+            $threadCounter = $XML.CreateElement("Counter")
+            $threadCounter.InnerXml = "\Thread(*)\*"
 
-    # Control if we are going to throw an error after trying to create the perfmon
-    $ShouldTrow = $True
+            # Add the XML element
+            $XML.DataCollectorSet.PerformanceCounterDataCollector.AppendChild($threadCounter)
 
-    # Check if we generated and error on import
-    If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Write-Logfile -string "Experfwiz imported."
-        $ShouldTrow = $false
-    }
-    # We have an error so handle it
-    elseif (![string]::IsNullOrEmpty(($logman | select-string "Data Collector Set already exists."))) {
+        }
+        else {}
 
-        # Remove the counter set
-        Remove-ExPerfwiz -Name $Name -Server $Server
+        # Write the XML to disk
+        $xmlfile = Join-Path $env:TEMP ExPerfwiz.xml
+        Write-Logfile -string ("Writing Configuration to: " + $xmlfile)
+        $XML.Save($xmlfile)
+        Write-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server)
 
-        # Try to create it again
-        [string]$logman = logman import -xml $xmlfile -name $Name -s $server
+        # Import the XML with our configuration
+        if ($PSCmdlet.ShouldProcess("$Server\$Name", "Creating ExPerfwiz Data Collector")) {
+            [string]$logman = logman import -xml $xmlfile -name $Name -s $server
+        }
 
-        # Check again if we have an error
-        If ([string]::isnullorempty(($logman | select-string "Error:"))) {
+        # Control if we are going to throw an error after trying to create the perfmon
+        $ShouldTrow = $True
+
+        # Check if we generated and error on import
+        If ($null -eq ($logman | select-string "Error:")) {
             Write-Logfile -string "Experfwiz imported."
             $ShouldTrow = $false
         }
+        # We have an error so handle it
+        elseif ($null -eq ($logman | select-string "Data Collector Set already exists.")) {
+
+            # Remove the counter set
+            Remove-ExPerfwiz -Name $Name -Server $Server -Confirm:$false
+
+            # Try to create it again
+            [string]$logman = logman import -xml $xmlfile -name $Name -s $server
+
+            # Check again if we have an error
+            If ([string]::isnullorempty(($logman | select-string "Error:"))) {
+                Write-Logfile -string "Experfwiz imported."
+                $ShouldTrow = $false
+            }
+        }
+
+        # If shouldthrow is still true then we have an error and need to show it
+        if ($ShouldTrow) {
+            Write-Logfile -string "[ERROR] - Problem importing perfwiz:"
+            Write-Logfile -string $logman
+            Throw $logman
+        }
+
+        ## Implement Start time
+        # The schedule funcation of Perfmon is broken and won't actually start a perfmon
+        # So going to have to do this manually using logman start in a scheduled task
+        # Scenarios supported:
+        # 1) Start Perfmon at time X daily run for time outlined in rest of settings
+        # 2) Setup perfmon without scheduled start time
+
+        # No start time value set so we are just using duration (Scenario 2)
+        if ([string]::IsNullOrEmpty($StartTime)) {
+            # Make sure the schedule is turned off
+            Write-Logfile -string ("No Start time so not creating Scheduled Task")
+        }
+        # Need to set the start / end time (Scenario 1)
+        else {
+            # Create a scheduled task with the listed start time
+            New-PerfWizScheduledTask -Name $Name -Server $Server -StartTime (Get-Date $StartTime -Format HH:mm)
+        }
+
+        # Need to start the counter set if asked to do so
+        If ($StartOnCreate) {
+            Start-ExPerfwiz -server $Server -Name $Name
+        }
+        else {}
+    
+        # Display back the newly created object
+        Get-ExPerfwiz -Name $Name -Server $Server
     }
-
-    # If shouldthrow is still true then we have an error and need to show it
-    if ($ShouldTrow) {
-        Write-Logfile -string "[ERROR] - Problem importing perfwiz:"
-        Write-Logfile -string $logman
-        Throw $logman
-    }
-
-    ## Implement Start time
-    # The schedule funcation of Perfmon is broken and won't actually start a perfmon
-    # So going to have to do this manually using logman start in a scheduled task
-    # Scenarios supported:
-    # 1) Start Perfmon at time X daily run for time outlined in rest of settings
-    # 2) Setup perfmon without scheduled start time
-
-    # No start time value set so we are just using duration (Scenario 2)
-    if ([string]::IsNullOrEmpty($StartTime)) {
-        # Make sure the schedule is turned off
-        Write-Logfile -string ("No Start time so not creating Scheduled Task")
-    }
-    # Need to set the start / end time (Scenario 1)
-    else {
-        # Create a scheduled task with the listed start time
-        New-PerfWizScheduledTask -Name $Name -Server $Server -StartTime (Get-Date $StartTime -Format HH:mm)
-    }
-
-    # Need to start the counter set if asked to do so
-    If ($StartOnCreate) {
-        Start-ExPerfwiz -server $Server -Name $Name
-    }
-    else {}
-
-    # Display back the newly created object
-    Get-ExPerfwiz -Name $Name -Server $Server
-
 }
