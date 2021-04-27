@@ -36,7 +36,7 @@ Function Write-Logfile {
     [string]$logstring = ( "[" + $date + "] - " + $string)
 
     # Write everything to our log file and the screen
-    $logstring | Out-File -FilePath $LogFile -Append
+    $logstring | Out-File -FilePath $LogFile -Append -Confirm:$false
     Write-Verbose  $logstring
 }
 

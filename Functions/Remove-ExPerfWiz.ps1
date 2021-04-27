@@ -35,6 +35,7 @@
     [cmdletbinding()]
     param (
 
+        [Parameter(ValueFromPipelineByPropertyName)]    
         [string]
         $Name = "Exchange_Perfwiz",
 
