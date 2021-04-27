@@ -16,6 +16,9 @@ If the server where data is being gathered doesn't have access to the internet d
   * From powershell in the extracted path run `Import-Module experfwiz.psd1`
   * Change to a different directory than the one with the psd1 file
 
+# Most Common Usage
+`New-Experfwiz -folderpath C:\perfwiz -startoncreate`
+
 # How to use
 The Module version of Experfwiz provides the following cmdlets to manage the Data Gathering.
 
@@ -75,21 +78,19 @@ Server|Name of the server to stop the collector set on.|Local Machine
 
 ### Default usage for data gathering
 
-  `New-ExPerfwiz -FolderPath C:\experfwiz`
-
-  When prompted pick the template for the version of Exchange that is being used
-
+  `New-ExPerfwiz -FolderPath C:\experfwiz -StartOnCreate`
 
 ### Stop Data Collection
 
   `Stop-ExPerfwiz`
 
-
 ### Collect data from another server
 
   `New-ExPerfwiz -FolderPath C:\experfwiz -server RemoteExchServer`
 
-  When prompted pick the template for the version of Exchange being used
+### Collect data from multiple servers
+
+`Get-ExchangeServer | Foreach {New-Experfwiz -folderpath C:\experfwiz -startoncreate -Server $_.name}`
 
 # Important Notes
 * The default duration is 8 hours to save on disk space meaning that the data collection will stop after 8 hours.
