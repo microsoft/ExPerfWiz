@@ -135,7 +135,8 @@
 
     )
 
-    ### Validate Template ###
+    # Check for new version of Experfwiz
+    Get-ExperfwizUpdate
 
     # Build path to templates
     $templatePath = join-path (split-path (Get-Module experfwiz).path -Parent) Templates

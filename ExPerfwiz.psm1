@@ -142,3 +142,10 @@ Function Get-PerfWizScheduledTask {
         Throw "UNABLE TO GET SCHEDULED TASK: $TaskResult"
     }
 }
+
+Function Get-ExperfwizUpdate {
+    if((Get-Module experfwiz -ListAvailable |Sort-Object -Property version -Descending)[0].version -lt (Find-Module experfwiz -ErrorAction SilentlyContinue).version){
+        Write-Warning "Newer Version of Experfwiz avalible from the gallery.  Please run Update-Module Experfwiz"
+        Write-Logfile -string "[WARNING] - New Version of Experfwiz Found"
+    }
+}
