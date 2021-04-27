@@ -32,7 +32,7 @@
 
 
     #>
-    [cmdletbinding()]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param (
 
         [Parameter(ValueFromPipelineByPropertyName)]    
@@ -43,22 +43,27 @@
         $Server = $env:ComputerName
     )
 
-    Write-Logfile -string ("Removing Experfwiz for: " + $server)
+    Process {
 
-    # Remove the experfwiz counter set
-    [string]$logman = logman delete -name $Name -s $server
+        Write-Logfile -string ("Removing Experfwiz for: " + $server)
 
-    # Check if we have an error and throw and error if needed.
-    If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Write-Logfile "ExPerfwiz removed"
+        # Remove the experfwiz counter set
+        if ($PSCmdlet.ShouldProcess("$Server\$Name", "Removing Performance Monitor Data Collector")) {
+            [string]$logman = logman delete -name $Name -s $server
+        }
+
+        # Check if we have an error and throw and error if needed.
+        If ([string]::isnullorempty(($logman | select-string "Error:"))) {
+            Write-Logfile "ExPerfwiz removed"
+        }
+        else {
+            Write-Logfile "[ERROR] - Unable to remove Collector"
+            Write-Logfile $logman
+            Throw $logman
+        }
+
+        # Remove the scheduled task if it is there
+        Remove-PerfWizScheduledTask -Name $Name -Server $Server
     }
-    else {
-        Write-Logfile "[ERROR] - Unable to remove Collector"
-        Write-Logfile $logman
-        Throw $logman
-    }
-
-    # Remove the scheduled task if it is there
-    Remove-PerfWizScheduledTask -Name $Name -Server $Server
 
 }

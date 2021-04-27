@@ -31,7 +31,7 @@
     Stop-ExPerfwiz -Name "My Collector Set" -Server RemoteServer-01
 
     #>
-    [cmdletbinding()]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param (
         [Parameter(ValueFromPipelineByPropertyName)]    
         [string]
@@ -41,18 +41,28 @@
         $Server = $env:ComputerName
     )
 
-    Write-Logfile -string ("Stopping ExPerfwiz: " + $server)
+    Process {
+        Write-Logfile -string ("Stopping ExPerfwiz: " + $server + "\" + $Name)
 
-    # Remove the experfwiz counter set
-    [string]$logman = logman stop -name $Name -s $server
+        # Remove the experfwiz counter set
+        if ($PSCmdlet.ShouldProcess("$Server\$Name", "Stopping ExPerfwiz Data Collection")) {
+            [string]$logman = logman stop -name $Name -s $server
+        }
 
-    # Check if we have an error and throw and error if needed.
-    If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-        Write-Logfile "ExPerfwiz Stopped"
-    }
-    else {
-        Write-Logfile "[ERROR] - Unable to Stop Collector"
-        Write-Logfile $logman
-        Throw $logman
+        # Check if we have an error and throw and error if needed.
+        If ($null -eq ($logman | select-string "Error:")) {
+            Write-Logfile "ExPerfwiz Stopped"
+        }
+        else {
+            # if we are not running already then just move on
+            if ($null -eq ($logman | select-string "is not running")) {
+                Write-Logfile "[ERROR] - Unable to Stop Collector"
+                Write-Logfile $logman
+                Throw $logman
+            }
+            else {
+                Write-LogFile "Collector Not Running"
+            }
+        }
     }
 }
