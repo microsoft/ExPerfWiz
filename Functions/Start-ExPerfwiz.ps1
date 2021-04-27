@@ -68,9 +68,15 @@
 
         # If we have an error then we need to throw else continue
         If ($logman | select-string "Error:") {
-            Write-Logfile "[ERROR] - Unable to Start Collector"
-            Write-Logfile $logman
-            Throw $logman        
+            # Don't throw an error if the collector is already started
+            if ($logman | select-string "administrator has refused the request") {
+                Write-Logfile "Collector already Started"
+            }
+            else {
+                Write-Logfile "[ERROR] - Unable to Start Collector"
+                Write-Logfile $logman
+                Throw $logman        
+            }
         }
         else {
             Write-Logfile "ExPerfwiz Started"
