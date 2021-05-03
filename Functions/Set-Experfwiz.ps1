@@ -50,7 +50,11 @@ Function Set-ExPerfwiz {
         $Server = $env:ComputerName,
 
         [string]
-        $StartTime
+        $StartTime,
+
+        [switch]
+        $Quiet
+
         
     )
 
@@ -96,7 +100,9 @@ Function Set-ExPerfwiz {
         }
     }
     End {
-        Get-ExPerfwiz
+        # Return the new object and values
+        if($quiet){}
+        else{Get-ExPerfwiz -name $name -Server $server}
     }
 
 }

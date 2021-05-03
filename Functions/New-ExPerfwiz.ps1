@@ -202,20 +202,19 @@
         $XML.DataCollectorSet.PerformanceCounterDataCollector.SampleInterval = [string]$Interval
 
         # Make sure the XML schedule is set to reflect if we are setting up a scheduled task
-        if ([string]::IsNullOrEmpty($StartTime)) {
+        if ($PSBoundParameters.ContainsKey("starttime")) {
+            $XML.DataCollectorSet.SchedulesEnabled = "1"
+            # Set the schedule date and time to reflect the values in the scheduled task
+            $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Format MM\/dd\/yyyy).tostring()
+            $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 2100 -Format MM\/dd\/yyyy).tostring()
+            $XML.DataCollectorSet.Schedule.StartTime = (Get-Date $StartTime -Format HH:mm).tostring()        
+        }
+        else {
             $XML.DataCollectorSet.SchedulesEnabled = "0"
             # Since not schedule we are going to set the date / time to 1900
             $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy).tostring()
             $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 1900 -Format MM\/dd\/yyyy).tostring()
             $XML.DataCollectorSet.Schedule.StartTime = (Get-Date -Hour 12 -Minute 0 -Format HH:mm ).tostring()
-        }
-        else {
-            $XML.DataCollectorSet.SchedulesEnabled = "1"
-            # Set the schedule date and time to reflect the values in the scheduled task
-            $XML.DataCollectorSet.Schedule.StartDate = (Get-date -Format MM\/dd\/yyyy).tostring()
-            $XML.DataCollectorSet.Schedule.EndDate = (Get-Date -Day 1 -Month 1 -Year 2100 -Format MM\/dd\/yyyy).tostring()
-            $XML.DataCollectorSet.Schedule.StartTime = (Get-Date $StartTime -Format HH:mm).tostring()
-
         }
 
         # If -threads is specified we need to add it to the counter set
@@ -253,7 +252,9 @@
             $ShouldTrow = $false
         }
         # We have an error so handle it
-        elseif ($null -eq ($logman | select-string "Data Collector Set already exists.")) {
+        elseif (!($null -eq ($logman | select-string "Data Collector Set already exists."))) {
+
+            Write-Logfile "Found duplicate set - remove & retry"
 
             # Remove the counter set
             Remove-ExPerfwiz -Name $Name -Server $Server -Confirm:$false
@@ -267,7 +268,6 @@
                 $ShouldTrow = $false
             }
         }
-
         # If shouldthrow is still true then we have an error and need to show it
         if ($ShouldTrow) {
             Write-Logfile -string "[ERROR] - Problem importing perfwiz:"
@@ -276,21 +276,14 @@
         }
 
         ## Implement Start time
-        # The schedule funcation of Perfmon is broken and won't actually start a perfmon
-        # So going to have to do this manually using logman start in a scheduled task
         # Scenarios supported:
         # 1) Start Perfmon at time X daily run for time outlined in rest of settings
         # 2) Setup perfmon without scheduled start time
-
-        # No start time value set so we are just using duration (Scenario 2)
-        if ([string]::IsNullOrEmpty($StartTime)) {
-            # Make sure the schedule is turned off
-            Write-Logfile -string ("No Start time so not creating Scheduled Task")
+        if ($PSBoundParameters.ContainsKey("starttime")){
+            Set-Experfwiz -name $Name -server $server -starttime $startTime -quiet
         }
-        # Need to set the start / end time (Scenario 1)
         else {
-            # Create a scheduled task with the listed start time
-            New-PerfWizScheduledTask -Name $Name -Server $Server -StartTime (Get-Date $StartTime -Format HH:mm)
+            Write-Logfile -string "No Start time provided"
         }
 
         # Need to start the counter set if asked to do so
