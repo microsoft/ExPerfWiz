@@ -49,6 +49,41 @@ StartTime|Daily time to start perfmon counter|NA
 Template| XML perfmon template file that should be loaded to create the data collector set.|Exch_13_16_19_Full.xml
 Threads|Includes threads in the counter set.|False
 
+### `Set-ExPerfwiz`
+Modifies the configuration of an existing data collector set.
+
+       [Parameter(ValueFromPipelineByPropertyName)]    
+        [string]
+        $Name = "Exchange_Perfwiz",
+
+        [timespan]
+        $Duration,
+
+        [int]
+        $Interval,
+
+        [int]
+        $MaxSize,
+
+        [string]
+        $Server = $env:ComputerName,
+
+        [string]
+        $StartTime,
+
+        [switch]
+        $Quiet
+
+Switch | Description|Default
+-------|-------|-------
+Duration| How long should the performance data be collected|08:00:00
+Interval|How often the performance data should be collected.|5s
+MaxSize|Maximum size of the perfmon log in MegaBytes (256-4096)|1024Mb
+Name|The name of the data collector set|Exchange_Perfwiz
+Server|Name of the server where the perfmon collector should be created|Local Machine
+StartTime|Daily time to start perfmon counter|NA
+Quiet|Suppress output|False
+
 
 ### `Remove-ExPerfwiz`
 Removes an ExPerfwiz data collector set
