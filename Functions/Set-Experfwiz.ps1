@@ -2,18 +2,18 @@ Function Set-ExPerfwiz {
     <#
 
     .SYNOPSIS
-    Starts a data collector set
+    Modifiy the configuration of an existing data collector set.
 
     .DESCRIPTION
-    Starts a data collector set on the local server or a remote server.
+    Allow for th emodification of some parameters of a data collector set once created.
 
     .PARAMETER Name
-    The Name of the Data Collector set to start
+    The Name of the Data Collector set to update.
 
     Default Exchange_Perfwiz
 
     .PARAMETER Server
-    Name of the remote server to start the data collector set on.
+    Name of the remote server to update the data collector set on.
 
     Default LocalHost
 
@@ -30,7 +30,7 @@ Function Set-ExPerfwiz {
     .PARAMETER StartTime
     Time of day to start the data collector set
     It will start at this time EVERY day until removed.
-    
+
     .PARAMETER Quiet
     Suppress output 
 
@@ -38,14 +38,14 @@ Function Set-ExPerfwiz {
      Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file
 
 	.EXAMPLE
-    Start the default data collector set on this server.
+    Set the default data collector set to start at 1pm on the local server.
 
-    Start-ExPerfwiz
+    Set-Experfwiz -StartTime 13:00:00 
 
     .EXAMPLE
-    Start a collector set on another server.
+    Set the duration to 4 hours and the interval to 1 second on a remove server
 
-    Start-ExPerfwiz -Name "My Collector Set" -Server RemoteServer-01
+    Set-ExPerfwiz -Server RemoteServer-01 -Duration 04:00:00 -Interval 1
 
     #>
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
@@ -71,7 +71,6 @@ Function Set-ExPerfwiz {
 
         [switch]
         $Quiet
-
         
     )
 
