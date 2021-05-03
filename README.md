@@ -52,28 +52,6 @@ Threads|Includes threads in the counter set.|False
 ### `Set-ExPerfwiz`
 Modifies the configuration of an existing data collector set.
 
-       [Parameter(ValueFromPipelineByPropertyName)]    
-        [string]
-        $Name = "Exchange_Perfwiz",
-
-        [timespan]
-        $Duration,
-
-        [int]
-        $Interval,
-
-        [int]
-        $MaxSize,
-
-        [string]
-        $Server = $env:ComputerName,
-
-        [string]
-        $StartTime,
-
-        [switch]
-        $Quiet
-
 Switch | Description|Default
 -------|-------|-------
 Duration| How long should the performance data be collected|08:00:00
