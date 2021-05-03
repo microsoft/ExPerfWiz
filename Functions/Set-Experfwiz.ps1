@@ -17,6 +17,23 @@ Function Set-ExPerfwiz {
 
     Default LocalHost
 
+    .PARAMETER Duration
+    Sets how long should the performance data be collected
+    Provided in time span format hh:mm:ss
+
+    .PARAMETER Interval
+    How often the performance data should be collected.
+
+    .PARAMETER Maxsize
+    Maximum size of the perfmon log in MegaBytes
+
+    .PARAMETER StartTime
+    Time of day to start the data collector set
+    It will start at this time EVERY day until removed.
+    
+    .PARAMETER Quiet
+    Suppress output 
+
 	.OUTPUTS
      Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file
 
@@ -101,8 +118,8 @@ Function Set-ExPerfwiz {
     }
     End {
         # Return the new object and values
-        if($quiet){}
-        else{Get-ExPerfwiz -name $name -Server $server}
+        if ($quiet) {}
+        else { Get-ExPerfwiz -name $name -Server $server }
     }
 
 }

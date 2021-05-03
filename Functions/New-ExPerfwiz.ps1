@@ -63,6 +63,12 @@
 
     Default is False
 
+    .PARAMETER StartTime
+    Time of day to start the data collector set
+    It will start at this time EVERY day until removed.
+
+    Default is <not set>
+
     .OUTPUTS
     Creates a data collector set in Perfmon based on the provided XML file
 
