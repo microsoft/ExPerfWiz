@@ -55,8 +55,21 @@ Function Convert-OnOffBool {
 }
 
 Function Get-ExperfwizUpdate {
-    if((Get-Module experfwiz -ListAvailable |Sort-Object -Property version -Descending)[0].version -lt (Find-Module experfwiz -ErrorAction SilentlyContinue).version){
-        Write-Warning "Newer Version of Experfwiz avalible from the gallery.  Please run Update-Module Experfwiz"
-        Write-Logfile -string "[WARNING] - New Version of Experfwiz Found"
+    
+    
+    # Get the latest version of the module in the gallery
+    $Request = Invoke-WebRequest -Uri https://www.powershellgallery.com/packages/experfwiz -TimeoutSec 10
+    # If we get back a 200 then compare the versions otherwise just move on
+    If ($Request.statuscode -eq 200) {
+        # Pull the latest version off the response URI
+        [Version]$Version = $Request.BaseResponse.ResponseUri.Segments[-1]
+        Write-Logfile ("Found Version: " + $Version)
+
+        # Compare the versions
+        if ((Get-Module experfwiz | Sort-Object -Property version -Descending)[0].version -lt $Version) {
+            Write-Warning "Newer Version of Experfwiz avalible from the gallery.  Please run Update-Module Experfwiz"
+            Write-Logfile -string "[WARNING] - New Version of Experfwiz Found"
+        }
     }
+    else { Write-Logfile ("Update Status Code: " + $Request.statuscode) }
 }
