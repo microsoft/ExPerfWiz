@@ -70,6 +70,7 @@ Function Get-ExperfwizUpdate {
             Write-Warning "Newer Version of Experfwiz avalible from the gallery.  Please run Update-Module Experfwiz"
             Write-Logfile -string "[WARNING] - New Version of Experfwiz Found"
         }
+        else {Write-Logfile "Version is Current"}
     }
     else { Write-Logfile ("Update Status Code: " + $Request.statuscode) }
 }
