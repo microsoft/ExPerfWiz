@@ -103,7 +103,7 @@
     #>
 
     ### Creates a new experfwiz collector
-    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     Param(
         [switch]
         $Circular,
@@ -244,48 +244,43 @@
         $XML.Save($xmlfile)
         Write-Logfile -string ("Importing Collector Set " + $xmlfile + " for " + $server)
 
-        # Import the XML with our configuration
-        if ($PSCmdlet.ShouldProcess("$Server\$Name", "Creating ExPerfwiz Data Collector")) {
-            [string]$logman = logman import -xml $xmlfile -name $Name -s $server
-        }
+        # Taking a proactive approach on possible conflicts with creating the collector
+        $currentcollector = get-experfwiz -Name $Name -Server $Server -ErrorAction SilentlyContinue
 
-        # Control if we are going to throw an error after trying to create the perfmon
-        $ShouldTrow = $True
-
-        # Check if we generated and error on import
-        If ($null -eq ($logman | select-string "Error:")) {
-            Write-Logfile -string "Experfwiz imported."
-            $ShouldTrow = $false
-        }
-        # We have an error so handle it
-        elseif (!($null -eq ($logman | select-string "Data Collector Set already exists."))) {
-
-            Write-Logfile "Found duplicate set - remove & retry"
-
-            # Remove the counter set
-            Remove-ExPerfwiz -Name $Name -Server $Server -Confirm:$false
-
-            # Try to create it again
-            [string]$logman = logman import -xml $xmlfile -name $Name -s $server
-
-            # Check again if we have an error
-            If ([string]::isnullorempty(($logman | select-string "Error:"))) {
-                Write-Logfile -string "Experfwiz imported."
-                $ShouldTrow = $false
+        # Check the status of the collectors and take the correct action
+        switch ($currentcollector.status) {
+            Running {
+                Write-LogFile "Running Duplicate Found"                
+                if ($PSCmdlet.ShouldProcess("$Server\$Name", "Stop Running Collector Set and Replace")) {
+                    Stop-ExPerfwiz -Name $Name -Server $Server
+                }
+                Remove-ExPerfwiz -Name $Name -Server $server -Confirm:$false
             }
+            Stopped {
+                Write-LogFile "Duplicate Found"
+                #Remove-ExPerfwiz -Name $Name -Server $server -Confirm:$false
+            }
+            Default {
+                Write-Logfile "No Comflicts Found"
+            }
+        }        
+
+        # Import the XML with our configuration
+        [string]$logman = logman import -xml $xmlfile -name $Name -s $server
+
+        # Check if we have an error and throw if needed
+        if ($null -eq ($logman | Select-String "Error:")) {
+            Write-LogFile "Collector Successfully Created"
         }
-        # If shouldthrow is still true then we have an error and need to show it
-        if ($ShouldTrow) {
-            Write-Logfile -string "[ERROR] - Problem importing perfwiz:"
-            Write-Logfile -string $logman
+        else {
             Throw $logman
         }
-
+        
         ## Implement Start time
         # Scenarios supported:
         # 1) Start Perfmon at time X daily run for time outlined in rest of settings
         # 2) Setup perfmon without scheduled start time
-        if ($PSBoundParameters.ContainsKey("starttime")){
+        if ($PSBoundParameters.ContainsKey("starttime")) {
             Set-Experfwiz -name $Name -server $server -starttime $startTime -quiet
         }
         else {
