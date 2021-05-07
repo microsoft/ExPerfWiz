@@ -17,6 +17,9 @@
 
     Default LocalHost
 
+    .PARAMETER ShowLog
+    Shows the experfwiz log file on the server
+
 	.OUTPUTS
     Logs all activity into $env:LOCALAPPDATA\ExPefwiz.log file
 
@@ -37,24 +40,28 @@
         $Name,
 
         [string]
-        $Server = $env:ComputerName
+        $Server = $env:ComputerName,
+
+        [switch]
+        $ShowLog
 
     )
 
+    if ($ShowLog) { Notepad (Join-path $env:LOCALAPPDATA ExPefwiz.log); return }
+    
     Write-Logfile -string ("Getting ExPerfwiz: " + $server)
 
-
-    # If no name was provided then we need to return all counters logman finds
+    # If no name was provided then we need to return all collectors logman finds
     if ([string]::IsNullOrEmpty($Name)) {
 
-        # Returns all found counter sets
+        # Returns all found collector sets
         $logmanAll = logman query -s $server
 
         If (!([string]::isnullorempty(($logmanAll | select-string "Error:")))) {
             throw $logmanAll[-1]
         }
 
-        # Process the string return into a set of counter names
+        # Process the string return into a set of collector names
         $i = -3
         [array]$perfLogNames = $null
 
@@ -71,10 +78,10 @@
         [array]$perfLogNames += $Name
     }
 
-    # Query each counter found in turn to get their details
-    foreach ($counterName in $perfLogNames) {
+    # Query each collector found in turn to get their details
+    foreach ($collectorname in $perfLogNames) {
 
-        $logman = logman query $counterName -s $Server
+        $logman = logman query $collectorname -s $Server
 
         # Quick error check
         If (!([string]::isnullorempty(($logman | select-string "Error:")))) {
