@@ -29,6 +29,7 @@ Switch | Description|Default
 -------|-------|-------
 Name|Name of the Data Collector set|Exchange_Perfwiz
 Server|Name of the Server |Local Machine
+ShowLog|Displays the ExperfWiz Log file|NA
 
 
 ### `New-ExPerfwiz`
