@@ -56,9 +56,16 @@ Function Convert-OnOffBool {
 
 Function Get-ExperfwizUpdate {
     
-    
+    # Need to suppress error output here
+    $CEAP = $ErrorActionPreference
+    $ErrorActionPreference = 'SilentlyContinue'
+
     # Get the latest version of the module in the gallery
     $Request = Invoke-WebRequest -Uri https://www.powershellgallery.com/packages/experfwiz -TimeoutSec 10
+
+    #Set error action back it back to what is was
+    $ErrorActionPreference = $CEAP
+
     # If we get back a 200 then compare the versions otherwise just move on
     If ($Request.statuscode -eq 200) {
         # Pull the latest version off the response URI
